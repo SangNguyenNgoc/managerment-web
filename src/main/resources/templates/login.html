@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <form method="post" th:action="@{/login}" th:object="${user}">
+        <h1>Sign in</h1>
+        <div class="social-container">
+            <a class="social" href="#"><i class="fab fa-facebook-f"></i></a>
+            <a class="social" href="#"><i class="fab fa-google-plus-g"></i></a>
+            <a class="social" href="#"><i class="fab fa-linkedin-in"></i></a>
+        </div>
+        <span>or use your account</span>
+        <input name="username" placeholder="mssv" type="text"/>
+        <input name="password" placeholder="Password" type="password"/>
+        <div class="social-container-1">
+            <a href="#">Forgot password?</a>
+            <a href="#" id="signUp">Sign Up</a>
+        </div>
+        <button class="button">Sign In</button>
+    </form>
+</body>
+</html>

@@ -2,7 +2,14 @@ package com.example.managementweb.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -12,7 +19,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Entity
 @Table(name = "persons")
-public class PersonEntity {
+public class PersonEntity implements UserDetails {
     @Id
     @Column(name = "id", nullable = false, length = 20)
     private Long id;
@@ -37,6 +44,10 @@ public class PersonEntity {
 
     @Column(name = "status", nullable = false)
     private Boolean status;
+
+    @Column(name = "role", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
 
     @OneToMany(
@@ -64,5 +75,37 @@ public class PersonEntity {
                 "profession = " + profession + ", " +
                 "phoneNumber = " + phoneNumber + ", " +
                 "status = " + status + ")";
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority(getRole().getValue()));
+        return authorities;
+    }
+
+    @Override
+    public String getUsername() {
+        return getId().toString();
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }
