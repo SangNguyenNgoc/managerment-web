@@ -1,6 +1,5 @@
 package com.example.managementweb.config;
 
-import com.example.managementweb.services.CustomUserDetailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -1,4 +1,4 @@
-package com.example.managementweb.services;
+package com.example.managementweb.config;
 
 import com.example.managementweb.config.SecurityConfig;
 import com.example.managementweb.entities.PersonEntity;
