@@ -29,6 +29,16 @@ public class SecurityConfig {
                 .csrf().disable()
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/").permitAll()
+                        .requestMatchers(
+                                "/home",
+                                "/login",
+                                "/css/**",
+                                "/fonts/**",
+                                "/images/**",
+                                "/js/**",
+                                "/scss/**"
+                        )
+                        .permitAll()
                         .requestMatchers("/admin/**")
                         .hasAnyAuthority("ROLE_ADMIN")
                         .anyRequest().permitAll()
