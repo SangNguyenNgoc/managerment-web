@@ -1,4 +1,4 @@
-package com.example.managementweb.entities;
+package com.example.managementweb.models.entities;
 
 import jakarta.persistence.*;
 import lombok.*;

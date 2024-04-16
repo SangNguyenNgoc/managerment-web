@@ -16,7 +16,7 @@ public class HomeController {
 
     @GetMapping("/")
     public String home(){
-        personService.getById(3121410417L);
+//        personService.findById(3121410417L);
         return "index";
     }
 

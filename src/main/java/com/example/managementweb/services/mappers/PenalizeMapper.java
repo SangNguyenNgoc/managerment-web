@@ -1,4 +1,4 @@
-package com.example.managementweb.models;
+package com.example.managementweb.services.mappers;
 
 import org.mapstruct.Mapper;
 

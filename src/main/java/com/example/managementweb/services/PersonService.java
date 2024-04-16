@@ -1,19 +1,21 @@
 package com.example.managementweb.services;
 
-import com.example.managementweb.dtos.PersonDTO;
-import com.example.managementweb.entities.PersonEntity;
-import com.example.managementweb.entities.Role;
-import com.example.managementweb.models.PersonMapper;
+import com.example.managementweb.models.dtos.person.PersonCreateDto;
+import com.example.managementweb.models.dtos.person.PersonResponseDto;
+import com.example.managementweb.models.dtos.person.PersonUpdateDto;
+import com.example.managementweb.models.entities.PersonEntity;
+import com.example.managementweb.models.entities.Role;
+import com.example.managementweb.services.mappers.PersonMapper;
 import com.example.managementweb.repositories.PersonRepository;
 import com.example.managementweb.services.interfaces.IPersonService;
-import com.example.managementweb.util.ObjectsValidator;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -24,33 +26,40 @@ public class PersonService implements IPersonService {
 
     PersonMapper personMapper;
 
-    ObjectsValidator<PersonDTO> validator;
+    PasswordEncoder passwordEncoder;
 
     @Override
-    public List<PersonEntity> findAll() {
-        return personRepository.findAll();
-    }
-
-
-    @Override
-    public PersonDTO getById(Long id) {
-        PersonEntity person = personRepository.findById(id).orElse(new PersonEntity());
-        return personMapper.toDTO(person);
+    public List<PersonResponseDto> findAll() {
+        List<PersonEntity> personEntities = personRepository.findAll();
+        return personEntities.stream()
+                .map(personMapper::toResponseDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public List<String> register(PersonDTO personDTO) {
-        List<String> error = validator.validate(personDTO);
-        if (error.isEmpty()){
-            PersonEntity newPerson = personMapper.toEntity(personDTO);
-            newPerson.setRole(Role.ROLE_ADMIN);
-            newPerson.setPassword(new BCryptPasswordEncoder().encode(personDTO.getPassword()));
-            newPerson.setStatus(true);
-            personRepository.save(newPerson);
-            return List.of("success");
+    public PersonResponseDto findById(Long id) {
+        PersonEntity person = personRepository.findById(id).orElse(null);
+        return personMapper.toResponseDto(person);
+    }
+
+    @Override
+    public PersonResponseDto create(PersonCreateDto personCreateDto) {
+        PersonEntity personEntity = personMapper.toEntity(personCreateDto);
+        personEntity.setPassword(passwordEncoder.encode(personEntity.getPassword()));
+        personEntity.setStatus(true);
+        personEntity.setRole(Role.ROLE_USER);
+        PersonEntity result = personRepository.save(personEntity);
+        return personMapper.toResponseDto(result);
+    }
+
+    @Override
+    public PersonResponseDto update(PersonUpdateDto personUpdateDto) {
+        PersonEntity person = personRepository.findById(Long.valueOf(personUpdateDto.getId())).orElse(null);
+        if(person != null) {
+            PersonEntity personAfterUpdate = personMapper.partialUpdate(personUpdateDto, person);
+            PersonEntity result = personRepository.save(personAfterUpdate);
+            return personMapper.toResponseDto(result);
         }
-        return error;
+        return null;
     }
-
-
 }

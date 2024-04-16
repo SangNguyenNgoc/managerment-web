@@ -1,7 +1,6 @@
 package com.example.managementweb.config;
 
-import com.example.managementweb.config.SecurityConfig;
-import com.example.managementweb.entities.PersonEntity;
+import com.example.managementweb.models.entities.PersonEntity;
 import com.example.managementweb.repositories.PersonRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;

@@ -1,14 +1,18 @@
 package com.example.managementweb.services.interfaces;
 
-import com.example.managementweb.dtos.PersonDTO;
-import com.example.managementweb.entities.PersonEntity;
-import org.springframework.stereotype.Service;
+import com.example.managementweb.models.dtos.person.PersonCreateDto;
+import com.example.managementweb.models.dtos.person.PersonResponseDto;
+import com.example.managementweb.models.dtos.person.PersonUpdateDto;
 
 import java.util.List;
 
 public interface IPersonService {
 
-    List<PersonEntity> findAll();
-    PersonDTO getById(Long id);
-    List<String>register(PersonDTO personDTO);
+    List<PersonResponseDto> findAll();
+
+    PersonResponseDto findById(Long id);
+
+    PersonResponseDto create(PersonCreateDto personCreateDto);
+
+    PersonResponseDto update(PersonUpdateDto personUpdateDto);
 }
