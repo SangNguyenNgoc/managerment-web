@@ -1,0 +1,64 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Thymeleaf Fragments: home</title>
+    <div th:replace="fragments/lib-link"></div>
+</head>
+
+<body>
+
+
+    <div class="container-fluid px-0 d-flex bg-light">
+        <div th:include="fragments/sidebar"></div>
+        <div class="container px-0 mx-0">
+            <div th:include="fragments/header"></div>
+            <div class="px-sm-5">
+                <div class="d-flex justify-content-between align-items-center py-4">
+                    <h4>Danh Sách</h4>
+                    <a class="btn btn-primary" role="button" th:href="@{/admin/person/create}">Tạo mới</a>
+                </div>
+                <div class="bg-white border p-3" style="border-radius: 10px;">
+                    <h4 class="pb-3">Users</h4>
+                    <table id="example" class="table table-striped nowrap" style="width: 100%">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Họ Tên</th>
+                                <th>Khoa</th>
+                                <th>Chuyên Ngành</th>
+                                <th>Email</th>
+                                <th>Điện thoại</th>
+                                <th>Chức năng</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="person : ${list}">
+                                <td th:text="${person.id}">ID</td>
+                                <td th:text="${person.name}">Name</td>
+                                <td th:text="${person.department}">Department</td>
+                                <td th:text="${person.profession}">Profession</td>
+                                <td th:text="${person.email}">Email</td>
+                                <td th:text="${person.phoneNumber}">Phone Number</td>
+                                <td class="d-flex justify-content-center"><a
+                                        th:href="@{/admin/person/detail/{id}(id=${person.id})}"><i
+                                            class="fa-solid fa-eye"></i></a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+</body>
+<div th:replace="fragments/lib-script"></div>
+<script>
+    $(document).ready(function () {
+        $("#example").DataTable();
+    });
+</script>
+
+</html>

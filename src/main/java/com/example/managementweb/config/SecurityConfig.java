@@ -14,6 +14,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
+
 public class SecurityConfig {
 
     private final CustomUserDetailService customUserDetailService;
@@ -26,29 +27,30 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
-                .csrf().disable()
+                .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/").permitAll()
-                        .requestMatchers(
-                                "/home",
-                                "/login",
-                                "/css/**",
-                                "/fonts/**",
-                                "/images/**",
-                                "/js/**",
-                                "/scss/**"
-                        )
-                        .permitAll()
-                        .requestMatchers("/admin/**")
-                        .hasAnyAuthority("ROLE_ADMIN")
-                        .anyRequest().permitAll()
+                        .requestMatchers("/**").permitAll()
+//                        .requestMatchers(
+//                                "/home",
+//                                "/login",
+//                                "/css/**",
+//                                "/fonts/**",
+//                                "/images/**",
+//                                "/js/**",
+//                                "/scss/**"
+//                        )
+//                        .permitAll()
+//                        .requestMatchers("/admin/**")
+//                        .hasAnyAuthority("ROLE_ADMIN")
+//                        .anyRequest()
+//                                .permitAll()
                 )
-                .formLogin(login -> login
-                        .loginPage("/login")
-                        .loginProcessingUrl("/login")
-                        .defaultSuccessUrl("/home")
-                        .permitAll()
-                )
+//                .formLogin(login -> login
+//                        .loginPage("/login")
+//                        .loginProcessingUrl("/login")
+//                        .defaultSuccessUrl("/home")
+//                        .permitAll()
+//                )
                 .build();
     }
 
