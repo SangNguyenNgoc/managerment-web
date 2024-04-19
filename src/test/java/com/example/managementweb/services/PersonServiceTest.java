@@ -33,7 +33,7 @@ class PersonServiceTest {
     @Test
     void create() {
         PersonCreateDto personCreateDto = PersonCreateDto.builder()
-                .id("3121410418")
+                .id("16")
                 .name("Nguyễn Ngọc Sang")
                 .email("nngocsang39@gmail.com")
                 .password("3121410417")
@@ -47,5 +47,15 @@ class PersonServiceTest {
 
     @Test
     void update() {
+    }
+    @Test
+    void delete(){
+        PersonResponseDto result = personService.delete(16L);
+        System.out.println(appUtil.toJson(result));
+    }
+    @Test
+    void addPersonsFromExcel() {
+        String filePath = "D:\\Book1.xlsx";
+        personService.addPersonsFromExcel(filePath);
     }
 }
