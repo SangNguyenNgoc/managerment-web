@@ -15,4 +15,6 @@ public interface IPersonService {
     PersonResponseDto create(PersonCreateDto personCreateDto);
 
     PersonResponseDto update(PersonUpdateDto personUpdateDto);
+
+    PersonResponseDto delete(Long id);
 }
