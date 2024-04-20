@@ -55,7 +55,7 @@ class PersonServiceTest {
     }
     @Test
     void addPersonsFromExcel() {
-        String filePath = "D:\\Book1.xlsx";
+        String filePath = "D:\\import_CSDL.xlsx";
         personService.addPersonsFromExcel(filePath);
     }
 }
