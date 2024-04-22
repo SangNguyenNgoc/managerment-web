@@ -100,7 +100,9 @@ public class PersonService implements IPersonService {
                 if (id.contains(".")) {
                     id = id.substring(0, id.indexOf("."));
                 }
-
+                if (phoneNumber.contains(".")) {
+                    phoneNumber = phoneNumber.substring(0, phoneNumber.indexOf("."));
+                }
                 PersonCreateDto personCreateDto = PersonCreateDto.builder()
                         .id(id)
                         .name(name)
@@ -125,7 +127,22 @@ public class PersonService implements IPersonService {
             case STRING:
                 return cell.getStringCellValue();
             case NUMERIC:
+                // Chuyển đổi số thành chuỗi
                 return String.valueOf(cell.getNumericCellValue());
+            case FORMULA:
+                // Giải công thức và trả về giá trị kết quả
+                FormulaEvaluator evaluator = cell.getSheet().getWorkbook().getCreationHelper().createFormulaEvaluator();
+                CellValue cellValue = evaluator.evaluate(cell);
+                switch (cellValue.getCellType()) {
+                    case BOOLEAN:
+                        return String.valueOf(cellValue.getBooleanValue());
+                    case NUMERIC:
+                        return String.valueOf(cellValue.getNumberValue());
+                    case STRING:
+                        return cellValue.getStringValue();
+                    default:
+                        return null;
+                }
             default:
                 return null;
         }
