@@ -37,12 +37,12 @@ public class UsageInfoService implements IUsageInfoService {
 
     @Override
     @Transactional
-    public UsageInfoBorrowDto borrowDevice(String userId, String deviceId) {
-        PersonEntity person = personRepository.findById(AppUtil.parseId(userId)).orElse(null);
-        DeviceEntity device = deviceRepository.findByIdIsTrue(AppUtil.parseId(deviceId)).orElse(null);
+    public UsageInfoBorrowDto borrowDevice(Long userId, Long deviceId) {
+        PersonEntity person = personRepository.findById(userId).orElse(null);
+        DeviceEntity device = deviceRepository.findByIdIsTrue(deviceId).orElse(null);
         if(person == null
                 || device == null
-                || !penalizeRepository.findByPersonIsPenalize(AppUtil.parseId(userId)).isEmpty()){
+                || !penalizeRepository.findByPersonIsPenalize(userId).isEmpty()){
             return null;
         }
         UsageInfoEntity usageInfo = UsageInfoEntity.builder()
@@ -50,7 +50,8 @@ public class UsageInfoService implements IUsageInfoService {
                 .device(device)
                 .borrowTime(LocalDateTime.now())
                 .build();
-        return coverToBorrowDto(usageInfoRepository.save(usageInfo));
+        usageInfoRepository.save(usageInfo);
+        return usageInfoMapper.toBorrowDto(usageInfo);
     }
 
     @Override
@@ -66,13 +67,13 @@ public class UsageInfoService implements IUsageInfoService {
             return null;
         }
         usageInfo.setReturnTime(LocalDateTime.now());
-        return coverToBorrowDto(usageInfo);
+        return usageInfoMapper.toBorrowDto(usageInfo);
     }
 
     @Override
     @Transactional
-    public Boolean deleteBorrow(String id) {
-        UsageInfoEntity usageInfo = usageInfoRepository.findByIdAndBorrow(AppUtil.parseId(id));
+    public Boolean deleteBorrow(Long id) {
+        UsageInfoEntity usageInfo = usageInfoRepository.findByIdAndBorrow(id);
         if (usageInfo == null){
             return false;
         }
@@ -90,23 +91,13 @@ public class UsageInfoService implements IUsageInfoService {
         UsageInfoEntity newUsageInfo = usageInfoMapper.toEntity(requestDto);
         newUsageInfo.setPerson(person);
         newUsageInfo.setDevice(device);
-        UsageInfoBookingDto usageInfoBookingDto = usageInfoMapper.toBookingDto(usageInfoRepository.save(newUsageInfo));
-        usageInfoBookingDto.setBookingTime(AppUtil.dateToString(requestDto.getBookingTime()));
+        UsageInfoEntity savedUsageInfo = usageInfoRepository.save(newUsageInfo);
+        UsageInfoBookingDto usageInfoBookingDto = usageInfoMapper.toBookingDto(savedUsageInfo);
         //Hẹn giờ xóa
         LocalDateTime now = LocalDateTime.now();
         Timer timer = new Timer();
         timer.schedule(new DeleteBookingTask(usageInfoBookingDto.getId(), usageInfoRepository), Duration.between(now, requestDto.getBookingTime()).toMillis());
-
         return usageInfoBookingDto;
     }
 
-    private UsageInfoBorrowDto coverToBorrowDto(UsageInfoEntity usageInfo){
-        if(usageInfo == null){
-            return null;
-        }
-        UsageInfoBorrowDto newUsageInfoBorrow = usageInfoMapper.toBorrowDto(usageInfo);
-        newUsageInfoBorrow.setBorrowTime(AppUtil.dateToString(usageInfo.getBorrowTime()));
-        newUsageInfoBorrow.setReturnTime(AppUtil.dateToString(usageInfo.getReturnTime()));
-        return newUsageInfoBorrow;
-    }
 }

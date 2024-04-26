@@ -83,12 +83,13 @@ public class DeviceService implements IDeviceService {
                 .anyMatch(item -> item.getReturnTime() == null ||(item.getBookingTime() != null && !item.getBookingTime().toLocalDate().isEqual(date)));
     }
 
+
     @Override
     public List<DeviceResponseDto> getAllByName(String name) {
         List<DeviceEntity> deviceEntities = deviceRepository.findByName(name);
-        deviceEntities.stream()
+        return deviceEntities.stream()
                 .filter(deviceEntity -> checkUseAndBooking(deviceEntity,LocalDate.now()))
-                .toList();
-        return deviceMapper.toResponseDtoList(deviceEntities);
+                .map(deviceMapper::toResponseDto)
+                .collect(Collectors.toList());
     }
 }

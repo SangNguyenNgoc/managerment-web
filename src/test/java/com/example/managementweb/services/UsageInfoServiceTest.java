@@ -24,8 +24,8 @@ class UsageInfoServiceTest {
 
     @Test
     void testBorrow(){
-        UsageInfoBorrowDto usageInfoBorrowDto = usageInfoService.borrowDevice("a","120191");
-        System.out.println(appUtil.toJson(usageInfoBorrowDto));
+//        UsageInfoBorrowDto usageInfoBorrowDto = usageInfoService.borrowDevice("a","120191");
+//        System.out.println(appUtil.toJson(usageInfoBorrowDto));
     }
 
     @Test

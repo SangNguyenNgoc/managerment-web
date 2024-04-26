@@ -59,7 +59,6 @@ public class DeviceServiceTest {
         DeviceResponseDto result = deviceService.delete(1L);
         System.out.println(appUtil.toJson(result));
     }
-}
 
     void testFindByName(){
         List<DeviceResponseDto> deviceResponseDtos = deviceService.getAllByName("Micro");

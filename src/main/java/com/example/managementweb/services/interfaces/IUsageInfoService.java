@@ -7,9 +7,9 @@ import com.example.managementweb.models.dtos.usageInfo.UsageInfoBorrowDto;
 import java.util.List;
 
 public interface IUsageInfoService {
-    UsageInfoBorrowDto borrowDevice(String userId, String deviceId);
+    UsageInfoBorrowDto borrowDevice(Long userId, Long deviceId);
     List<UsageInfoBorrowDto> getAllBorrow();
     UsageInfoBorrowDto returnDevice(String Id);
-    Boolean deleteBorrow(String id);
+    Boolean deleteBorrow(Long id);
     UsageInfoBookingDto bookingDevice(UsageInfoBookingRequestDto requestDto);
 }

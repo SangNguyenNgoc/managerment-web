@@ -21,7 +21,10 @@ public class UsageInfoBookingDto implements Serializable {
     /**
      * DTO for {@link com.example.managementweb.models.entities.PersonEntity}
      */
-    @Value
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class PersonEntityDto implements Serializable {
         Long id;
         String name;
@@ -32,7 +35,10 @@ public class UsageInfoBookingDto implements Serializable {
     /**
      * DTO for {@link com.example.managementweb.models.entities.DeviceEntity}
      */
-    @Value
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class DeviceEntityDto implements Serializable {
         Long id;
         String name;

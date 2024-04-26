@@ -4,10 +4,7 @@ import com.example.managementweb.models.dtos.usageInfo.UsageInfoBookingDto;
 import com.example.managementweb.models.dtos.usageInfo.UsageInfoBookingRequestDto;
 import com.example.managementweb.models.dtos.usageInfo.UsageInfoBorrowDto;
 import com.example.managementweb.models.entities.UsageInfoEntity;
-import org.mapstruct.BeanMapping;
-import org.mapstruct.Mapper;
-import org.mapstruct.MappingTarget;
-import org.mapstruct.NullValuePropertyMappingStrategy;
+import org.mapstruct.*;
 
 import java.util.List;
 
@@ -15,6 +12,10 @@ import java.util.List;
 public interface UsageInfoMapper {
     UsageInfoEntity toEntity(UsageInfoBorrowDto usageInfoBorrowDto);
 
+    @Mappings({
+            @Mapping(target = "borrowTime", source = "borrowTime", dateFormat = "dd-MM-yyyy HH:mm"),
+            @Mapping(target = "returnTime", source = "returnTime", dateFormat = "dd-MM-yyyy HH:mm")
+    })
     UsageInfoBorrowDto toBorrowDto(UsageInfoEntity usageInfoEntity);
 
     List<UsageInfoBorrowDto> toDtoList(List<UsageInfoEntity> usageInfoEntities);
@@ -24,6 +25,9 @@ public interface UsageInfoMapper {
 
     UsageInfoEntity toEntity(UsageInfoBookingDto usageInfoBookingDto);
 
+    @Mappings({
+            @Mapping(target = "bookingTime", source = "bookingTime", dateFormat = "dd-MM-yyyy HH:mm")
+    })
     UsageInfoBookingDto toBookingDto(UsageInfoEntity usageInfoEntity);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
