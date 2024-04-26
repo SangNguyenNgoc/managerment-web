@@ -17,6 +17,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import java.time.LocalDate;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -70,5 +73,22 @@ public class DeviceService implements IDeviceService {
                     device.setStatus(false);
                     return deviceMapper.toResponseDto(device);
                 }).orElse(null);
+    }
+
+
+    @Override
+    public boolean checkUseAndBooking(DeviceEntity device,LocalDate date ) {
+        return device.getUsageInfos()
+                .stream()
+                .anyMatch(item -> item.getReturnTime() == null ||(item.getBookingTime() != null && !item.getBookingTime().toLocalDate().isEqual(date)));
+    }
+
+    @Override
+    public List<DeviceResponseDto> getAllByName(String name) {
+        List<DeviceEntity> deviceEntities = deviceRepository.findByName(name);
+        deviceEntities.stream()
+                .filter(deviceEntity -> checkUseAndBooking(deviceEntity,LocalDate.now()))
+                .toList();
+        return deviceMapper.toResponseDtoList(deviceEntities);
     }
 }

@@ -3,8 +3,6 @@ package com.example.managementweb.services;
 import com.example.managementweb.models.dtos.device.DeviceCreateDto;
 import com.example.managementweb.models.dtos.device.DeviceResponseDto;
 import com.example.managementweb.models.dtos.device.DeviceUpdateDto;
-import com.example.managementweb.models.dtos.person.PersonCreateDto;
-import com.example.managementweb.models.dtos.person.PersonResponseDto;
 import com.example.managementweb.util.AppUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,5 +58,11 @@ public class DeviceServiceTest {
     void delete() {
         DeviceResponseDto result = deviceService.delete(1L);
         System.out.println(appUtil.toJson(result));
+    }
+}
+
+    void testFindByName(){
+        List<DeviceResponseDto> deviceResponseDtos = deviceService.getAllByName("Micro");
+        System.out.println(appUtil.toJson(deviceResponseDtos));
     }
 }
