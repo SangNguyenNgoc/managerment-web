@@ -11,15 +11,17 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-@Service
 public class DeviceService implements IDeviceService {
-    DeviceRepository deviceRepository ;
+    DeviceRepository deviceRepository;
     DeviceMapper deviceMapper;
 
     @Override
@@ -32,50 +34,41 @@ public class DeviceService implements IDeviceService {
 
     @Override
     public DeviceResponseDto findById(Long id) {
-        DeviceEntity device = deviceRepository.findById(Long.valueOf(id)).orElse(null);
-        return deviceMapper.toResponseDto(device);
+        Optional<DeviceEntity> deviceEntity = deviceRepository.findById(id);
+        return deviceEntity.
+                map(deviceMapper::toResponseDto)
+                .orElse(null);
     }
 
     @Override
     public DeviceResponseDto create(DeviceCreateDto deviceCreateDto) {
         DeviceEntity deviceEntity = deviceMapper.toEntity(deviceCreateDto);
-        deviceEntity.setName(deviceEntity.getName());
-        deviceEntity.setDescription(deviceEntity.getDescription());
         deviceEntity.setStatus(true);
         DeviceEntity result = deviceRepository.save(deviceEntity);
         return deviceMapper.toResponseDto(result);
-
     }
 
     @Override
     public DeviceResponseDto update(DeviceUpdateDto deviceUpdateDto) {
-        DeviceEntity device = deviceRepository.findById(Long.valueOf(deviceUpdateDto.getId())).orElse(null);
-        if(device != null) {
-            DeviceEntity deviceAfterUpdate = deviceMapper.partialUpdate(deviceUpdateDto, device);
-            DeviceEntity result = deviceRepository.save(deviceAfterUpdate);
-            return deviceMapper.toResponseDto(result);
-        }
-        return null;
+        Optional<DeviceEntity> deviceEntity = deviceRepository.findById(Long.valueOf(deviceUpdateDto.getId()));
+        return deviceEntity
+                .map(device -> {
+                    DeviceEntity deviceAfterUpdate = deviceMapper.partialUpdate(deviceUpdateDto, device);
+                    DeviceEntity result = deviceRepository.save(deviceAfterUpdate);
+                    return deviceMapper.toResponseDto(result);
+                })
+                .orElse(null);
     }
 
-//    @Override
-//    public DeviceResponseDto delete(Long id) {
-//        DeviceEntity device = deviceRepository.findById(Long.valueOf(id)).orElse(null);
-//        if(device != null) {
-//            deviceRepository.delete(device);
-//            device.setStatus(false);
-//            return deviceMapper.toResponseDto(device);
-//        }
-//        return null;
-//    }
+
     @Override
+    @Transactional
     public DeviceResponseDto delete(Long id) {
-        DeviceEntity device = deviceRepository.findById(Long.valueOf(id)).orElse(null);
-        if(device != null) {
-            device.setStatus(false);
-            deviceRepository.save(device);
-            return deviceMapper.toResponseDto(device);
-        }
-        return null;
+        Optional<DeviceEntity> deviceEntity = deviceRepository.findById(id);
+        return deviceEntity
+                .map(device -> {
+                    device.setStatus(false);
+                    return deviceMapper.toResponseDto(device);
+                }).orElse(null);
     }
 }

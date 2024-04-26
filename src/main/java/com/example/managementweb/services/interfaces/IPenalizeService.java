@@ -15,5 +15,7 @@ public interface IPenalizeService {
 
     PenalizeResponseDto update(PenalizeUpdateDto penalizeUpdateDto);
 
-    PenalizeResponseDto delete(Long id);
+    PenalizeResponseDto updateStatus(Long id);
+
+    void delete(Long id);
 }

@@ -17,7 +17,9 @@ import java.io.Serializable;
 @AllArgsConstructor
 
 public class DeviceResponseDto implements Serializable {
-    Long id;
-    String name;
-    String description;
+    private Long id;
+    private String name;
+    private String description;
+    private Boolean status;
+
 }

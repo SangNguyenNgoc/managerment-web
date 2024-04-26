@@ -8,21 +8,23 @@ import com.example.managementweb.models.entities.Role;
 import com.example.managementweb.services.mappers.PersonMapper;
 import com.example.managementweb.repositories.PersonRepository;
 import com.example.managementweb.services.interfaces.IPersonService;
+import com.example.managementweb.util.ObjectsValidator;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
 import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 
 @Service
@@ -36,6 +38,8 @@ public class PersonService implements IPersonService {
 
     PasswordEncoder passwordEncoder;
 
+    ObjectsValidator<PersonCreateDto> personValidator;
+
     @Override
     public List<PersonResponseDto> findAll() {
         List<PersonEntity> personEntities = personRepository.findAll();
@@ -45,9 +49,27 @@ public class PersonService implements IPersonService {
     }
 
     @Override
+    public List<PersonResponseDto> findByStatusTrue() {
+        List<PersonEntity> personEntities = personRepository.findByStatusTrue();
+        return personEntities.stream()
+                .map(personMapper::toResponseDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public PersonResponseDto findById(Long id) {
-        PersonEntity person = personRepository.findById(id).orElse(null);
-        return personMapper.toResponseDto(person);
+        Optional<PersonEntity> personEntity = personRepository.findById(id);
+        return personEntity
+                .map(personMapper::toResponseDto)
+                .orElse(null);
+    }
+
+    @Override
+    public PersonResponseDto findByIdAndStatusTrue(Long id) {
+        Optional<PersonEntity> personEntity = personRepository.findByIdAndStatusTrue(id);
+        return personEntity
+                .map(personMapper::toResponseDto)
+                .orElse(null);
     }
 
     @Override
@@ -62,63 +84,82 @@ public class PersonService implements IPersonService {
 
     @Override
     public PersonResponseDto update(PersonUpdateDto personUpdateDto) {
-        PersonEntity person = personRepository.findById(Long.valueOf(personUpdateDto.getId())).orElse(null);
-        if(person != null) {
-            PersonEntity personAfterUpdate = personMapper.partialUpdate(personUpdateDto, person);
-            PersonEntity result = personRepository.save(personAfterUpdate);
-            return personMapper.toResponseDto(result);
-        }
-        return null;
+        Optional<PersonEntity> personEntity = personRepository.findByIdAndStatusTrue(Long.valueOf(personUpdateDto.getId()));
+        return personEntity
+                .map(person -> {
+                    PersonEntity personAfterUpdate = personMapper.partialUpdate(personUpdateDto, person);
+                    PersonEntity result = personRepository.save(personAfterUpdate);
+                    return personMapper.toResponseDto(result);
+                })
+                .orElse(null);
     }
+
     @Override
+    @Transactional
     public PersonResponseDto delete(Long id) {
-        PersonEntity person = personRepository.findById(Long.valueOf(id)).orElse(null);
-        if(person != null) {
-            person.setStatus(false);
-            personRepository.save(person);
-            return personMapper.toResponseDto(person);
-        }
-        return null;
+        Optional<PersonEntity> personEntity = personRepository.findByIdAndStatusTrue(id);
+        return personEntity
+                .map(person -> {
+                    person.setStatus(false);
+                    return personMapper.toResponseDto(person);
+                })
+                .orElse(null);
     }
-    public void addPersonsFromExcel(String filePath) {
-        try (FileInputStream fileInputStream = new FileInputStream(new File(filePath));
-             Workbook workbook = new XSSFWorkbook(fileInputStream)) {
-            Sheet sheet = workbook.getSheetAt(0); // Lấy sheet đầu tiên
 
+    @Override
+    public Boolean existById(Long id) {
+        return personRepository.existsById(id);
+    }
+
+    @Override
+    public Boolean existByEmail(String email) {
+        return personRepository.existsByEmail(email);
+    }
+
+    @Override
+    public Boolean existByIdAndStatusTrue(Long id) {
+        return personRepository.existsByIdAndStatusTrue(id);
+    }
+
+    @Override
+    public Boolean importFromExcel(MultipartFile selectedFile) {
+        try (Workbook workbook = WorkbookFactory.create(selectedFile.getInputStream())) {
+            Sheet sheet = workbook.getSheetAt(0);
+            List<PersonEntity> personEntities = new ArrayList<>();
             for (Row row : sheet) {
-                if (row.getRowNum() == 0) continue; // Bỏ qua dòng tiêu đề
-
-                // Đọc dữ liệu từ các ô trong dòng
-                String id = getStringValueFromCell(row.getCell(0));
-                String name = getStringValueFromCell(row.getCell(1));
-                String department = getStringValueFromCell(row.getCell(2));
-                String profession = getStringValueFromCell(row.getCell(3));
-                String phoneNumber = getStringValueFromCell(row.getCell(4));
-                String password = getStringValueFromCell(row.getCell(5));
-                String email = getStringValueFromCell(row.getCell(6));
-
-                if (id.contains(".")) {
-                    id = id.substring(0, id.indexOf("."));
+                if(row.getCell(0) == null) {
+                    break;
                 }
-                if (phoneNumber.contains(".")) {
-                    phoneNumber = phoneNumber.substring(0, phoneNumber.indexOf("."));
+                if (row.getRowNum() > 0) {
+                    PersonCreateDto person = getFromRow(row);
+                    if (!personValidator.validate(person).isEmpty()) {
+                        throw new RuntimeException();
+                    } else {
+                        personEntities.add(personMapper.toEntity(person));
+                    }
                 }
-                PersonCreateDto personCreateDto = PersonCreateDto.builder()
-                        .id(id)
-                        .name(name)
-                        .department(department)
-                        .profession(profession)
-                        .phoneNumber(phoneNumber)
-                        .email(email)
-                        .password(password)
-                        .build();
-
-                create(personCreateDto);
             }
+            if(!personEntities.isEmpty()) {
+                personRepository.saveAll(personEntities);
+            }
+            return true;
         } catch (IOException e) {
-            e.printStackTrace();
+            return false;
         }
     }
+
+    private PersonCreateDto getFromRow(Row row) {
+        return PersonCreateDto.builder()
+                .id(String.valueOf((long) row.getCell(0).getNumericCellValue()))
+                .name(row.getCell(1).getStringCellValue())
+                .email(row.getCell(6).getStringCellValue())
+                .password(String.valueOf(row.getCell(5).getNumericCellValue()))
+                .department(row.getCell(2).getStringCellValue())
+                .profession(row.getCell(3).getStringCellValue())
+                .phoneNumber(row.getCell(4).getStringCellValue())
+                .build();
+    }
+
     private String getStringValueFromCell(Cell cell) {
         if (cell == null) {
             return null;

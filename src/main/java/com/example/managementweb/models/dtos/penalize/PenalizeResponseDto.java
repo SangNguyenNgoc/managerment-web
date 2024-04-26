@@ -1,6 +1,7 @@
 package com.example.managementweb.models.dtos.penalize;
 
 
+import com.example.managementweb.models.dtos.person.PersonResponseDto;
 import com.example.managementweb.models.entities.PenalizeEntity;
 import com.example.managementweb.models.entities.PersonEntity;
 import lombok.AllArgsConstructor;
@@ -18,14 +19,12 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-
-
 public class PenalizeResponseDto  implements Serializable {
     Long id;
     String type;
     Integer payment;
-    LocalDateTime date;
+    String date;
     Boolean status;
-    PersonEntity person;
+    PersonResponseDto person;
 
 }

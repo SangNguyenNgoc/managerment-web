@@ -14,11 +14,12 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PersonResponseDto implements Serializable {
-    Long id;
-    String name;
-    String department;
-    String email;
-    String profession;
-    String phoneNumber;
-    Role role;
+    private Long id;
+    private String name;
+    private String department;
+    private String email;
+    private String profession;
+    private String phoneNumber;
+    private Boolean status;
+    private Role role;
 }

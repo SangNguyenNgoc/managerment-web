@@ -5,17 +5,25 @@ import com.example.managementweb.models.dtos.penalize.PenalizeCreateDto;
 import com.example.managementweb.models.dtos.penalize.PenalizeResponseDto;
 import com.example.managementweb.models.dtos.penalize.PenalizeUpdateDto;
 
+import com.example.managementweb.models.dtos.person.PersonCreateDto;
+import com.example.managementweb.models.dtos.person.PersonResponseDto;
+import com.example.managementweb.models.dtos.person.PersonUpdateDto;
 import com.example.managementweb.models.entities.PenalizeEntity;
-import org.mapstruct.BeanMapping;
-import org.mapstruct.Mapper;
-import org.mapstruct.MappingTarget;
-import org.mapstruct.NullValuePropertyMappingStrategy;
+import com.example.managementweb.models.entities.PersonEntity;
+import org.mapstruct.*;
 
 @Mapper(componentModel = "spring")
 public interface PenalizeMapper {
-    PenalizeEntity toEntity(PenalizeCreateDto penalizeCreateDto);
-    PenalizeResponseDto toResponseDto(PenalizeEntity penalizeEntity);
+
+    @Mappings({
+            @Mapping(target = "date", source = "date", dateFormat = "dd-MM-yyyy")
+    })
+    PenalizeResponseDto toDto(PenalizeEntity penalizeEntity);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    PenalizeEntity partialUpdate(PenalizeUpdateDto PenalizeUpdateDto, @MappingTarget PenalizeEntity penalizeEntity);
+    PenalizeEntity partialUpdate(
+            PenalizeUpdateDto penalizeUpdateDto,
+            @MappingTarget PenalizeEntity penalizeEntity
+    );
+
 }
