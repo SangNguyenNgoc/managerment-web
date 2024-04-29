@@ -90,8 +90,7 @@ public class DeviceService implements IDeviceService {
         return deviceEntities.stream()
                 .map(deviceEntity -> {
                     DeviceResponseDto dto = deviceMapper.toResponseDto(deviceEntity);
-                    boolean isBorrow = checkUseAndBooking(deviceEntity, LocalDate.now());
-                    dto.setIsBorrow(isBorrow);
+                    dto.setIsBorrow(checkUseAndBooking(deviceEntity, LocalDate.now()));
                     return dto;
                 })
                 .collect(Collectors.toList());
