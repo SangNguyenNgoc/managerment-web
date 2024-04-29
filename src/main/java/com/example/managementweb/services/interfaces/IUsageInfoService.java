@@ -12,4 +12,5 @@ public interface IUsageInfoService {
     UsageInfoBorrowDto returnDevice(String Id);
     Boolean deleteBorrow(Long id);
     UsageInfoBookingDto bookingDevice(UsageInfoBookingRequestDto requestDto);
+    Boolean checkIn(Long personId);
 }

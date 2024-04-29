@@ -88,8 +88,12 @@ public class DeviceService implements IDeviceService {
     public List<DeviceResponseDto> getAllByName(String name) {
         List<DeviceEntity> deviceEntities = deviceRepository.findByName(name);
         return deviceEntities.stream()
-                .filter(deviceEntity -> checkUseAndBooking(deviceEntity,LocalDate.now()))
-                .map(deviceMapper::toResponseDto)
+                .map(deviceEntity -> {
+                    DeviceResponseDto dto = deviceMapper.toResponseDto(deviceEntity);
+                    boolean isBorrow = checkUseAndBooking(deviceEntity, LocalDate.now());
+                    dto.setIsBorrow(isBorrow);
+                    return dto;
+                })
                 .collect(Collectors.toList());
     }
 }
