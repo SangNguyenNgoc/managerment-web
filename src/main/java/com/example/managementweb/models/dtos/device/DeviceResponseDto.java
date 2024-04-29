@@ -21,5 +21,6 @@ public class DeviceResponseDto implements Serializable {
     private String name;
     private String description;
     private Boolean status;
+    private Boolean isBorrow;
 
 }

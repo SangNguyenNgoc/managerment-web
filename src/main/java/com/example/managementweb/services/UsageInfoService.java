@@ -89,9 +89,11 @@ public class UsageInfoService implements IUsageInfoService {
         PersonEntity person = personRepository.findById(requestDto.getPersonId()).orElse(null);
         DeviceEntity device = deviceRepository.findById(requestDto.getDeviceId()).orElse(null);
 
-        UsageInfoEntity newUsageInfo = usageInfoMapper.toEntity(requestDto);
-        newUsageInfo.setPerson(person);
-        newUsageInfo.setDevice(device);
+        UsageInfoEntity newUsageInfo = UsageInfoEntity.builder()
+                .bookingTime(requestDto.getBookingTime())
+                .device(device)
+                .person(person)
+                .build();
         UsageInfoEntity savedUsageInfo = usageInfoRepository.save(newUsageInfo);
         UsageInfoBookingDto usageInfoBookingDto = usageInfoMapper.toBookingDto(savedUsageInfo);
         //Hẹn giờ xóa
@@ -101,4 +103,16 @@ public class UsageInfoService implements IUsageInfoService {
         return usageInfoBookingDto;
     }
 
+    @Override
+    public Boolean checkIn(Long personId) {
+        PersonEntity person = personRepository.findById(personId).orElse(null);
+        if(person == null || !penalizeRepository.findByPersonIsPenalize(personId).isEmpty()) {
+            return false;
+        }
+        UsageInfoEntity usageInfo = usageInfoRepository.save(UsageInfoEntity.builder()
+                .person(person)
+                .checkinTime(LocalDateTime.now())
+                .build());
+        return true;
+    }
 }
