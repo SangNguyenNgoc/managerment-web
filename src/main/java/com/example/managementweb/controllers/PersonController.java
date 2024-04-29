@@ -16,7 +16,7 @@ import java.util.*;
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/admin/person")
-public class AdminController {
+public class PersonController {
     static List<PersonResponseDto> peopleList = generateRandomPersons(20);
     public static List<PersonResponseDto> generateRandomPersons(int count) {
         List<PersonResponseDto> personList = new ArrayList<>();
@@ -79,5 +79,4 @@ public class AdminController {
         peopleList.add(newPerson);
         return "redirect:/admin/person";
     }
-
-}
+    }
