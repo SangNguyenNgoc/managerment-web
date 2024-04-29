@@ -4,17 +4,11 @@ import com.example.managementweb.models.dtos.person.PersonCreateDto;
 import com.example.managementweb.services.interfaces.IPersonService;
 import com.example.managementweb.util.AppUtil;
 import com.example.managementweb.util.SecurityUtil;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -34,7 +28,7 @@ public class AuthController {
     public String registerPage(@ModelAttribute("register") PersonCreateDto register) {
         String user = SecurityUtil.getSessionUser();
         if(user != null) {
-            return "index";
+            return "user/index";
         }
         return "auth/register";
     }

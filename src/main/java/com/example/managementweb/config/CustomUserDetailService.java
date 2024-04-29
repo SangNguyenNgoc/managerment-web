@@ -22,7 +22,7 @@ public class CustomUserDetailService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        PersonEntity user = personRepository.findById(Long.parseLong(username))
+        PersonEntity user = personRepository.findByIdAndStatusTrue(Long.parseLong(username))
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
         return new org.springframework.security.core.userdetails.User(
                 user.getUsername(),
