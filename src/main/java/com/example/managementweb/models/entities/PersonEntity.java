@@ -41,6 +41,9 @@ public class PersonEntity implements UserDetails {
     @Column(name = "phone_number", length = 10, nullable = false)
     private String phoneNumber;
 
+    @Column(name = "verify_code", length = 6, nullable = true)
+    private String verifyCode;
+
     @Column(name = "status", nullable = false)
     private Boolean status;
 

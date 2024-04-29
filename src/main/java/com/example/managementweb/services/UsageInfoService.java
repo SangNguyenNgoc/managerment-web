@@ -34,6 +34,7 @@ public class UsageInfoService implements IUsageInfoService {
     DeviceRepository deviceRepository;
     PenalizeRepository penalizeRepository;
     UsageInfoMapper usageInfoMapper;
+    AppUtil appUtil;
 
     @Override
     @Transactional
@@ -62,7 +63,7 @@ public class UsageInfoService implements IUsageInfoService {
     @Override
     @Transactional
     public UsageInfoBorrowDto returnDevice(String id) {
-        UsageInfoEntity usageInfo = usageInfoRepository.findByIdForReturn(AppUtil.parseId(id));
+        UsageInfoEntity usageInfo = usageInfoRepository.findByIdForReturn(appUtil.parseId(id));
         if (usageInfo == null){
             return null;
         }

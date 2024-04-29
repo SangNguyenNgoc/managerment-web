@@ -16,7 +16,21 @@ spring:
       hibernate:
         format_sql: false
         dialect: org.hibernate.dialect.MySQL8Dialect
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: cinemaapp114@gmail.com
+    password: mjfaaewlsmponyhy
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 server:
   port: 8080
   error:
     include-message: always
+
+pass:
+  length-of-pass: 9

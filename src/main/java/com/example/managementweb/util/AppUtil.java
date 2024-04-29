@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Random;
 
 @Component
 public class AppUtil {
@@ -14,7 +15,7 @@ public class AppUtil {
         return gson.toJson(o);
     }
 
-    public static Long parseId(String idString) {
+    public Long parseId(String idString) {
         try {
             return Long.parseLong(idString);
         } catch (Exception ex) {
@@ -22,11 +23,24 @@ public class AppUtil {
         }
     }
 
-    public static String dateToString(LocalDateTime dateTime) {
+    public String dateToString(LocalDateTime dateTime) {
         if(dateTime == null){
             return null;
         }
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
         return dateTime.format(formatter);
+    }
+
+    private static final String ALLOWED_CHARACTERS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890@#$%&?";
+
+
+    public String generateRandomString(int length) {
+        Random random = new Random();
+        StringBuilder sb = new StringBuilder(length);
+        for (int i = 0; i < length; i++) {
+            int randomIndex = random.nextInt(ALLOWED_CHARACTERS.length());
+            sb.append(ALLOWED_CHARACTERS.charAt(randomIndex));
+        }
+        return sb.toString();
     }
 }

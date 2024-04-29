@@ -8,13 +8,24 @@ import com.example.managementweb.models.entities.Role;
 import com.example.managementweb.services.mappers.PersonMapper;
 import com.example.managementweb.repositories.PersonRepository;
 import com.example.managementweb.services.interfaces.IPersonService;
+import com.example.managementweb.util.AppUtil;
+import com.example.managementweb.util.EmailService;
 import com.example.managementweb.util.ObjectsValidator;
+import jakarta.mail.MessagingException;
+import jakarta.servlet.http.HttpSession;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.stereotype.Service;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -29,16 +40,24 @@ import java.io.IOException;
 
 @Service
 @RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class PersonService implements IPersonService {
 
-    PersonRepository personRepository;
+    private final PersonRepository personRepository;
 
-    PersonMapper personMapper;
+    private final EmailService emailService;
 
-    PasswordEncoder passwordEncoder;
+    private final PersonMapper personMapper;
 
-    ObjectsValidator<PersonCreateDto> personValidator;
+    private final PasswordEncoder passwordEncoder;
+
+    private final ObjectsValidator<PersonCreateDto> personValidator;
+
+    private final AppUtil appUtil;
+
+    private final HttpSession session;
+
+    @Value("${pass.length-of-pass}")
+    public Integer lengthOfPass;
 
     @Override
     public List<PersonResponseDto> findAll() {
@@ -79,6 +98,26 @@ public class PersonService implements IPersonService {
         personEntity.setStatus(true);
         personEntity.setRole(Role.ROLE_USER);
         PersonEntity result = personRepository.save(personEntity);
+        return personMapper.toResponseDto(result);
+    }
+
+    @Override
+    public PersonResponseDto register(PersonCreateDto personCreateDto) {
+        PersonEntity personEntity = personMapper.toEntity(personCreateDto);
+        personEntity.setPassword(passwordEncoder.encode(personEntity.getPassword()));
+        personEntity.setStatus(true);
+        personEntity.setRole(Role.ROLE_USER);
+        PersonEntity result = personRepository.save(personEntity);
+        UserDetails userDetails = createUserDetailFromRegister(result);
+
+        // Tạo Authentication từ UserDetails
+        UsernamePasswordAuthenticationToken authenticationToken =
+                new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+        // Lưu Authentication vào SecurityContextHolder
+        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+        session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
+                SecurityContextHolder.getContext());
+
         return personMapper.toResponseDto(result);
     }
 
@@ -146,6 +185,34 @@ public class PersonService implements IPersonService {
         } catch (IOException e) {
             return false;
         }
+    }
+
+    @Override
+    public UserDetails createUserDetailFromRegister(PersonEntity person) {
+        return new org.springframework.security.core.userdetails.User(
+                person.getUsername(),
+                person.getPassword(),
+                List.of(new SimpleGrantedAuthority(person.getRole().getValue()))
+        );
+    }
+
+    @Override
+    @Transactional
+    public void resetPassword(Long id) {
+        Optional<PersonEntity> personEntity = personRepository.findByIdAndStatusTrue(id);
+        personEntity.ifPresent(person -> {
+            String rawPass = appUtil.generateRandomString(lengthOfPass);
+            person.setPassword(passwordEncoder.encode(rawPass));
+            try {
+                emailService.sendEmail(
+                        person.getEmail(),
+                        "Cấp lại mật khẩu",
+                        "Mật khẩu mới của bạn là " + rawPass + " , vui lòng không chia sẽ mật khẩu này cho bất kì ai!!"
+                );
+            } catch (MessagingException | UnsupportedEncodingException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
     private PersonCreateDto getFromRow(Row row) {

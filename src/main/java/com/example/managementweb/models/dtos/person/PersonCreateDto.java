@@ -31,4 +31,7 @@ public class PersonCreateDto {
     @NotBlank(message = "Số điện thoại không được để trống")
     @Pattern(regexp = "^[0-9]{10}$", message = "Số điện thoại sai định dạng")
     private String phoneNumber;
+
+    @NotBlank(message = "Vui lòng xác nhận lại mật khẩu")
+    private String confirmPassword;
 }
