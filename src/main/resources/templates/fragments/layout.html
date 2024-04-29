@@ -1,20 +1,20 @@
 <!-- fragments/layout.html -->
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
-  <title>Layout</title>
-  <div th:replace="~{fragments/lib-link}"></div>
-  <div th:replace="~{fragments/lib-script}"></div>
+    <title>Layout</title>
+    <div th:replace="~{fragments/lib-link}"></div>
+    <div th:replace="~{fragments/lib-script}"></div>
 </head>
 <body>
 <div th:replace="~{fragments/loading-screen}"></div>
 <div class="container-fluid px-0 d-flex">
-  <div th:include="~{fragments/sidebar}"></div>
-  <div class="container-fluid px-0 mx-0 bg-light">
-    <div th:include="~{fragments/header}"></div>
+    <div th:include="~{fragments/sidebar}"></div>
+    <div class="container-fluid px-0 mx-0 bg-light">
+        <div th:include="~{fragments/header}"></div>
 
-    <div class="px-sm-5" layout:fragment="content"></div>
+        <div class="px-sm-5" layout:fragment="content"></div>
 
-  </div>
+    </div>
 </div>
 <div th:replace="fragments/lib-script"></div>
 
