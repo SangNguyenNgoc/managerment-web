@@ -19,6 +19,7 @@ import org.springframework.security.web.authentication.SavedRequestAwareAuthenti
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
+
 public class SecurityConfig {
 
     private final CustomUserDetailService customUserDetailService;
@@ -33,30 +34,31 @@ public class SecurityConfig {
         return http
                 .csrf().disable()
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/").permitAll()
-                        .requestMatchers(
-                                "/home",
-                                "/login",
-                                "/register",
+                        .requestMatchers("/**").permitAll()
+//                        .requestMatchers(
+//                                "/home",
+//                                "/login",
+//                                "/register",
                                 "/css/**",
-                                "/fonts/**",
-                                "/images/**",
-                                "/js/**",
-                                "/scss/**"
-                        )
-                        .permitAll()
-                        .requestMatchers("/admin/**")
-                        .hasAnyAuthority("ROLE_ADMIN")
-                        .anyRequest().permitAll()
+//                                "/fonts/**",
+//                                "/images/**",
+//                                "/js/**",
+//                                "/scss/**"
+//                        )
+//                        .permitAll()
+//                        .requestMatchers("/admin/**")
+//                        .hasAnyAuthority("ROLE_ADMIN")
+//                        .anyRequest()
+//                                .permitAll()
                 )
-                .formLogin(login -> login
-                        .loginPage("/login")
-                        .successHandler(new SavedRequestAwareAuthenticationSuccessHandler())
-                        .loginProcessingUrl("/login")
-                        .defaultSuccessUrl("/")
-                        .failureUrl("/login?error=true")
-                        .permitAll()
-                )
+//                .formLogin(login -> login
+//                        .loginPage("/login")
+//                        .successHandler(new SavedRequestAwareAuthenticationSuccessHandler())
+//                        .loginProcessingUrl("/login")
+//                        .defaultSuccessUrl("/")
+//                        .failureUrl("/login?error=true")
+//                        .permitAll()
+//                )
                 .build();
     }
 

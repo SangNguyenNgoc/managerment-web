@@ -1,0 +1,69 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{fragments/layout}">
+<head>
+    <title>Index</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="d-flex justify-content-between align-items-center py-4">
+        <!--            <h4>Danh Sách</h4>-->
+        <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0 font-weight-bold" style="font-size: 20px">
+                <li class="breadcrumb-item"><a class="text-decoration-none" th:href="@{/admin/person}">Quản lý người
+                    dùng</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Danh sách</li>
+            </ol>
+        </nav>
+        <a class="btn btn-primary" role="button" th:href="@{/admin/person/create}">Tạo mới</a>
+    </div>
+    <div class="bg-white border p-3" style="border-radius: 10px;">
+        <h4 class="pb-3">Users</h4>
+        <table id="example" class="table table-striped nowrap" style="width: 100%">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Họ Tên</th>
+                <th>Khoa</th>
+                <th>Chuyên Ngành</th>
+                <th>Email</th>
+                <th>Điện thoại</th>
+                <th>Chức năng</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="person : ${list}">
+                <td th:text="${person.id}">ID</td>
+                <td th:text="${person.name}">Name</td>
+                <td th:text="${person.department}">Department</td>
+                <td th:text="${person.profession}">Profession</td>
+                <td th:text="${person.email}">Email</td>
+                <td th:text="${person.phoneNumber}">Phone Number</td>
+                <td class="text-center">
+                    <a th:href="@{/admin/person/detail/{id}(id=${person.id})}">
+                        <i class="fa-solid fa-eye"></i>
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <script>
+        $(document).ready(function () {
+            $("#example").DataTable(
+                {
+                    searching: false,
+                    // responsive: true,
+                });
+            var entries = $(".dataTables_length");
+            entries.appendTo(".col-sm-12.col-md-6");
+            $(".dataTables_length:first").remove();
+            loadingEle.hide()
+        });
+    </script>
+    <style>
+        .dataTables_length {
+            float: right;
+        }
+    </style>
+</div>
+</body>
+</html>

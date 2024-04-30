@@ -1,0 +1,103 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{fragments/layout}">
+<head>
+    <title>Detail</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="d-flex justify-content-between align-items-center py-4">
+        <a class="btn" role="button" th:href="@{/admin/person}">Quay lại</a>
+        <div class="d-flex justify-content-center">
+            <a class="btn btn-warning" role="button" th:href="@{/admin/person/}">Phạt</a>
+            <a class="btn btn-primary ms-3" role="button" th:href="@{/admin/person/}">Lập phiếu</a>
+        </div>
+    </div>
+    <div class="bg-white border p-3 p-md-5" style="border-radius: 10px;">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+
+            <h4 class="">User Detail#<span th:text="${person.id}"></span></h4>
+            <button class="btn btn-outline-danger">Xóa</button>
+
+        </div>
+        <hr/>
+        <form class="mt-3" th:action="@{/admin/person/edit}" method="post" th:object="${person}">
+            <div class="row">
+                <div class="col-12 col-lg-6">
+                    <div class="mb-3 row">
+                        <label for="person_id" class="col-4 col-md-3 col-form-label">ID</label>
+                        <div class="col-8 col-md-9">
+                            <input type="number" disabled readonly class="form-control disabled" id="person_id"
+                                   th:value="${person.id}" th:field="*{id}">
+                            <input type="number" hidden th:value="${person.id}" th:field="*{id}">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-6">
+                    <div class="mb-3 row">
+                        <label for="fullname" class="col-4 col-md-3 col-form-label">Họ Tên</label>
+                        <div class="col-8 col-md-9">
+                            <input type="text" class="form-control" id="fullname" th:value="${person.name}"
+                                   th:field="*{name}">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 col-lg-6">
+                    <div class="mb-3 row">
+                        <label for="email" class="col-4 col-md-3 col-form-label">Email</label>
+                        <div class="col-8 col-md-9">
+                            <input type="email" class="form-control" id="email" th:value="${person.email}"
+                                   th:field="*{email}">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-6">
+                    <div class="mb-3 row">
+                        <label for="phone" class="col-4 col-md-3 col-form-label">Điện thoại</label>
+                        <div class="col-8 col-md-9">
+                            <input type="number" class="form-control" id="phone"
+                                   th:value="${person.phoneNumber}" th:field="*{phoneNumber}">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 col-lg-6">
+                    <div class="mb-3 row">
+                        <label for="major" class="col-4 col-md-3 col-form-label">Ngành</label>
+                        <div class="col-8 col-md-9">
+                            <input type="text" class="form-control" id="major" th:value="${person.department}"
+                                   th:field="*{department}">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-6">
+                    <div class="mb-3 row">
+                        <label for="specialization" class="col-4 col-md-3 col-form-label pe-0">Chuyên Ngành</label>
+                        <div class="col-8 col-md-9">
+                            <input type="text" class="form-control" id="specialization"
+                                   th:value="${person.profession}" th:field="*{profession}">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary px-4">Cập nhật</button>
+            </div>
+        </form>
+
+    </div>
+    <style>
+        label {
+            font-size: 14px !important;
+        }
+    </style>
+    <script>
+        $(document).ready(function () {
+            loadingEle.hide()
+        })
+    </script>
+</div>
+</body>
+
+</html>
