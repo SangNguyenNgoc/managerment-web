@@ -18,4 +18,6 @@ public interface IPenalizeService {
     PenalizeResponseDto updateStatus(Long id);
 
     void delete(Long id);
+
+    boolean isPenalize(Long personId);
 }

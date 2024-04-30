@@ -13,10 +13,12 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UsageInfoBookingDto implements Serializable {
-    Long id;
-    String bookingTime;
-    PersonEntityDto person;
-    DeviceEntityDto device;
+    private Long id;
+    private String bookingTime;
+    private PersonEntityDto person;
+    private DeviceEntityDto device;
+    private String borrowTime;
+
 
     /**
      * DTO for {@link com.example.managementweb.models.entities.PersonEntity}

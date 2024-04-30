@@ -13,7 +13,7 @@ import java.util.Optional;
 public interface DeviceRepository extends JpaRepository<DeviceEntity, Long> {
     List<DeviceEntity> findByStatusTrue();
 
-    DeviceEntity findByIdAndStatusTrue(Long id);
+    Optional<DeviceEntity> findByIdAndStatusTrue(Long id);
 
     boolean existsByIdAndStatusTrue(Long id);
 

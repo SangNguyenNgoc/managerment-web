@@ -28,7 +28,7 @@ public class DeviceEntity {
 
     @OneToMany(
             mappedBy = "device",
-            fetch = FetchType.EAGER,
+            fetch = FetchType.LAZY,
             cascade = CascadeType.PERSIST
     )
     private Set<UsageInfoEntity> usageInfos;

@@ -93,4 +93,9 @@ public class PenalizeService implements IPenalizeService {
     public void delete(Long id) {
         penalizeRepository.deleteById(id);
     }
+
+    @Override
+    public boolean isPenalize(Long personId) {
+        return !penalizeRepository.findByPersonIsPenalize(personId).isEmpty();
+    }
 }
