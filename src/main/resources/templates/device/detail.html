@@ -1,0 +1,65 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{fragments/layout}">
+<head>
+    <title>Detail</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="d-flex justify-content-between align-items-center py-4">
+        <a class="btn" role="button" th:href="@{/admin/device}">Quay lại</a>
+        <!--        <div class="d-flex justify-content-center">-->
+        <!--            <a class="btn btn-warning" role="button" th:href="@{/admin/device/}">Phạt</a>-->
+        <!--            <a class="btn btn-primary ms-3" role="button" th:href="@{/admin/device/}">Lập phiếu</a>-->
+        <!--        </div>-->
+    </div>
+    <div class="bg-white border p-3 px-md-5 py-md-4" style="border-radius: 10px;">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+
+            <h4 class="">Device Detail#<span th:text="${device.id}"></span></h4>
+            <button class="btn btn-outline-danger">Xóa</button>
+
+        </div>
+        <hr/>
+        <form class="mt-4" th:action="@{/admin/device/edit}" method="post" th:object="${device}">
+            <div class="row">
+                <div class="col-12 col-lg-6">
+                    <div class="mb-3 row">
+                        <label for="name" class="col-4 col-md-3 col-form-label">Tên</label>
+                        <div class="col-8 col-md-9">
+                            <input type="number" hidden th:value="${device.id}" th:field="*{id}">
+                            <input type="text" class="form-control" id="name" th:value="${device.name}"
+                                   th:field="*{name}">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 col-lg-6">
+                    <div class="mb-3 row">
+                        <label for="description" class="col-4 col-md-3 col-form-label">Description</label>
+                        <div class="col-8 col-md-9">
+                            <input type="text" class="form-control" id="description" th:value="${device.description}"
+                                   th:field="*{description}">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-2">
+                <button type="submit" class="btn btn-primary px-4">Cập nhật</button>
+            </div>
+        </form>
+
+    </div>
+    <style>
+        label {
+            font-size: 14px !important;
+        }
+    </style>
+    <script>
+        $(document).ready(function () {
+            loadingEle.hide()
+        })
+    </script>
+</div>
+</body>
+
+</html>
