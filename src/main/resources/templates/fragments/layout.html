@@ -1,22 +1,23 @@
 <!-- fragments/layout.html -->
-<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" lang="en">
 <head>
     <title>Layout</title>
     <div th:replace="~{fragments/lib-link}"></div>
     <div th:replace="~{fragments/lib-script}"></div>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
 <div th:replace="~{fragments/loading-screen}"></div>
 <div class="container-fluid px-0 d-flex">
-    <div th:include="~{fragments/sidebar}"></div>
+    <div th:insert="~{fragments/sidebar}"></div>
     <div class="container-fluid px-0 mx-0 bg-light">
-        <div th:include="~{fragments/header}"></div>
+        <div th:insert="~{fragments/header}"></div>
 
-        <div class="px-sm-5" layout:fragment="content"></div>
+        <div class="px-sm-5 container" layout:fragment="content"></div>
 
     </div>
 </div>
-<div th:replace="fragments/lib-script"></div>
+<div th:replace="~{fragments/lib-script}"></div>
 
 </body>
 </html>

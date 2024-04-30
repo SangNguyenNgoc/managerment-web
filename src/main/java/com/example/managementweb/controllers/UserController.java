@@ -4,6 +4,7 @@ import com.example.managementweb.models.dtos.device.DeviceResponseDto;
 import com.example.managementweb.models.dtos.person.PersonResponseDto;
 import com.example.managementweb.models.dtos.usageInfo.UsageInfoBookingDto;
 import com.example.managementweb.models.dtos.usageInfo.UsageInfoBookingRequestDto;
+import com.example.managementweb.models.entities.Role;
 import com.example.managementweb.services.interfaces.IDeviceService;
 import com.example.managementweb.services.interfaces.IPenalizeService;
 import com.example.managementweb.services.interfaces.IPersonService;
@@ -49,6 +50,9 @@ public class UserController {
         log.info(userId);
         if(userId != null) {
             PersonResponseDto person = personService.findById(Long.valueOf(userId));
+            if (person.getRole() == Role.ROLE_ADMIN) {
+                return "redirect:/admin/person";
+            }
             m.addAttribute("user", person.getName());
             if (filter == null) {
                 List<DeviceResponseDto> devices = deviceService.findByStatusTrue();
@@ -57,7 +61,6 @@ public class UserController {
                 List<DeviceResponseDto> devices = deviceService.getAllByName(filter);
                 m.addAttribute("deviceList", devices);
             }
-
         }
         return "user/index";
     }

@@ -3,6 +3,8 @@ package com.example.managementweb.controllers;
 import com.example.managementweb.models.dtos.person.PersonResponseDto;
 import com.example.managementweb.models.entities.PersonEntity;
 import com.example.managementweb.models.entities.Role;
+import com.example.managementweb.services.interfaces.IPersonService;
+import com.example.managementweb.util.SecurityUtil;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -17,6 +19,8 @@ import java.util.*;
 @RequiredArgsConstructor
 @RequestMapping("/admin/person")
 public class PersonController {
+
+    private final IPersonService personService;
     static List<PersonResponseDto> peopleList = generateRandomPersons(20);
     public static List<PersonResponseDto> generateRandomPersons(int count) {
         List<PersonResponseDto> personList = new ArrayList<>();
@@ -39,6 +43,11 @@ public class PersonController {
     @GetMapping("")
     public String index(Model model){
         model.addAttribute("list", peopleList);
+        String userId = SecurityUtil.getSessionUser();
+        if(userId != null) {
+            PersonResponseDto personResponseDto = personService.findByIdAndStatusTrue(Long.valueOf(userId));
+            model.addAttribute("user", personResponseDto.getName());
+        }
         return "person/index";
     }
 
