@@ -80,7 +80,7 @@ body{
 }
 .header {
     background-color: #fff;
-    height: 80px;
+    height: 100px;
 }
 .header-content {
     height: 100%;
@@ -99,7 +99,7 @@ body{
 .nar-icon-search {
     position: absolute;
     top: 20%;
-    left: 5%;
+    left: 3%;
     color: #909090;
 }
 .nar-icon {
@@ -111,7 +111,6 @@ body{
     justify-content: center;
     border-radius: 50%;
     color: #fff;
-    margin-left: 100px;
 }
 .content-container  {
     width: 914px;
@@ -192,4 +191,20 @@ body{
 /* person */
 .content-person-detai {
     height: 200px;
+}
+
+.has-search .form-control-feedback {
+    position: absolute;
+    z-index: 2;
+    display: block;
+    width: 2.375rem;
+    height: 2.375rem;
+    line-height: 2.375rem;
+    text-align: center;
+    pointer-events: none;
+    color: #aaa;
+}
+
+.has-search .form-control {
+    padding-left: 2.375rem;
 }

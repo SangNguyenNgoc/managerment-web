@@ -3,7 +3,9 @@ package com.example.managementweb.services;
 import com.example.managementweb.models.dtos.device.DeviceCreateDto;
 import com.example.managementweb.models.dtos.device.DeviceResponseDto;
 import com.example.managementweb.models.dtos.device.DeviceUpdateDto;
+import com.example.managementweb.models.dtos.person.PersonResponseDto;
 import com.example.managementweb.models.entities.DeviceEntity;
+import com.example.managementweb.models.entities.PersonEntity;
 import com.example.managementweb.repositories.DeviceRepository;
 import com.example.managementweb.services.interfaces.IDeviceService;
 import com.example.managementweb.services.mappers.DeviceMapper;
@@ -36,8 +38,25 @@ public class DeviceService implements IDeviceService {
     }
 
     @Override
+    public List<DeviceResponseDto> findByStatusTrue() {
+        List<DeviceEntity> deviceEntities = deviceRepository.findByStatusTrue();
+        return deviceEntities.stream()
+                .map(deviceMapper::toResponseDto)
+                .collect(Collectors.toList());
+    }
+
+
+    @Override
     public DeviceResponseDto findById(Long id) {
         Optional<DeviceEntity> deviceEntity = deviceRepository.findById(id);
+        return deviceEntity.
+                map(deviceMapper::toResponseDto)
+                .orElse(null);
+    }
+
+    @Override
+    public DeviceResponseDto findByIdAndStatusTrue(Long id) {
+        Optional<DeviceEntity> deviceEntity = deviceRepository.findByIdAndStatusTrue(id);
         return deviceEntity.
                 map(deviceMapper::toResponseDto)
                 .orElse(null);

@@ -26,7 +26,9 @@ public interface UsageInfoMapper {
     UsageInfoEntity toEntity(UsageInfoBookingDto usageInfoBookingDto);
 
     @Mappings({
-            @Mapping(target = "bookingTime", source = "bookingTime", dateFormat = "dd-MM-yyyy HH:mm")
+            @Mapping(target = "bookingTime", source = "bookingTime", dateFormat = "dd-MM-yyyy HH:mm"),
+            @Mapping(target = "borrowTime", source = "borrowTime", dateFormat = "dd-MM-yyyy HH:mm")
+
     })
     UsageInfoBookingDto toBookingDto(UsageInfoEntity usageInfoEntity);
 

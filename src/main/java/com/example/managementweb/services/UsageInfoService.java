@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.Timer;
 
 @Service
@@ -114,5 +115,24 @@ public class UsageInfoService implements IUsageInfoService {
                 .checkinTime(LocalDateTime.now())
                 .build());
         return true;
+    }
+
+    @Override
+    public UsageInfoBookingDto getById(Long id) {
+        Optional<UsageInfoEntity> usageInfo = usageInfoRepository.findById(id);
+        return usageInfo
+                .map(usageInfoMapper::toBookingDto)
+                .orElse(null);
+    }
+
+
+    @Override
+    public boolean existByBookingTime(LocalDateTime time, Long deviceId) {
+        return usageInfoRepository.existsByBookingTime(time.toLocalDate(), deviceId);
+    }
+
+    @Override
+    public boolean existByBorrowTime(LocalDateTime time, Long deviceId) {
+        return usageInfoRepository.existsByBorrowTime(time.toLocalDate(), deviceId);
     }
 }

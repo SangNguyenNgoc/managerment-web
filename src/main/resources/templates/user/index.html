@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com" rel="preconnect">
+    <link crossorigin href="https://fonts.gstatic.com" rel="preconnect">
+    <link href="https://fonts.googleapis.com/css2?family=Andika&family=Arimo:ital,wght@0,400..700;1,400..700&display=swap"
+          rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" th:href="@{/css/font.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/table.css}">
+    <script th:src="@{/js/jquery-3.7.1.min.js}" type="text/javascript"></script>
+    <meta charset="UTF-8">
+    <title>Trang chủ</title>
+</head>
+<body>
+<div th:replace="~{user/header}"></div>
+<div class="content container mt-3 d-flex flex-column align-items-center">
+    <div class="col-10 d-flex justify-content-start fs-4 fw-bold">
+    <a class="text-dark" th:href="@{/}" style="text-decoration: none">Danh sách thiết bị</a>
+    </div>
+    <div class="bg-white border col-10 p-3 mt-4 mb-5 rounded-3">
+        <table id="example" class="table table-hover nowrap" style="width: 100%">
+            <thead>
+            <tr class="fs-5">
+                <th>Mã thiết bị</th>
+                <th>Tên thiết bị</th>
+                <th>Mô tả</th>
+                <th class="text-center">Tác vụ</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr style="height: 50px" th:each="device : ${deviceList}">
+                <td th:text="${device.id}"></td>
+                <td th:text="${device.name}"></td>
+                <td th:text="${device.description}"></td>
+                <td>
+                    <div class="d-flex justify-content-center">
+                        <a th:href="@{/booking/{deviceId}(deviceId=${device.id})}">
+                            <i class="fa-solid fa-eye"></i>
+                        </a>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"
+        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
+        integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+<script th:src="@{/js/user/home.js}" type="text/javascript"></script>
+</html>
