@@ -114,4 +114,9 @@ public class DeviceService implements IDeviceService {
                 })
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public Boolean eisistById(Long id) {
+        return deviceRepository.existsById(id);
+    }
 }

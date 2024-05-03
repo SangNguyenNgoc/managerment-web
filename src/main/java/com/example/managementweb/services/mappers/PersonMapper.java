@@ -1,5 +1,6 @@
 package com.example.managementweb.services.mappers;
 
+import com.example.managementweb.models.dtos.person.PersonAddDto;
 import com.example.managementweb.models.dtos.person.PersonCreateDto;
 import com.example.managementweb.models.dtos.person.PersonResponseDto;
 import com.example.managementweb.models.dtos.person.PersonUpdateDto;
@@ -15,4 +16,11 @@ public interface PersonMapper {
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     PersonEntity partialUpdate(PersonUpdateDto personUpdateDto, @MappingTarget PersonEntity personEntity);
+
+    PersonEntity toEntity(PersonAddDto personAddDto);
+
+    PersonAddDto toDto(PersonEntity personEntity);
+
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    PersonEntity partialUpdate(PersonAddDto personAddDto, @MappingTarget PersonEntity personEntity);
 }

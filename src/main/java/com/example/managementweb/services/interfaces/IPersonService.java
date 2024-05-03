@@ -1,5 +1,6 @@
 package com.example.managementweb.services.interfaces;
 
+import com.example.managementweb.models.dtos.person.PersonAddDto;
 import com.example.managementweb.models.dtos.person.PersonCreateDto;
 import com.example.managementweb.models.dtos.person.PersonResponseDto;
 import com.example.managementweb.models.dtos.person.PersonUpdateDto;
@@ -20,7 +21,7 @@ public interface IPersonService {
 
     PersonResponseDto findByIdAndStatusTrue(Long id);
 
-    PersonResponseDto create(PersonCreateDto personCreateDto);
+    PersonResponseDto create(PersonAddDto personAddDto);
 
     PersonResponseDto register(PersonCreateDto personCreateDto);
 

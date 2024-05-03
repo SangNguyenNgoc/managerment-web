@@ -1,5 +1,6 @@
 package com.example.managementweb.services;
 
+import com.example.managementweb.models.dtos.person.PersonAddDto;
 import com.example.managementweb.models.dtos.person.PersonCreateDto;
 import com.example.managementweb.models.dtos.person.PersonResponseDto;
 import com.example.managementweb.models.dtos.person.PersonUpdateDto;
@@ -92,9 +93,9 @@ public class PersonService implements IPersonService {
     }
 
     @Override
-    public PersonResponseDto create(PersonCreateDto personCreateDto) {
-        PersonEntity personEntity = personMapper.toEntity(personCreateDto);
-        personEntity.setPassword(passwordEncoder.encode(personEntity.getPassword()));
+    public PersonResponseDto create(PersonAddDto personAddDto) {
+        PersonEntity personEntity = personMapper.toEntity(personAddDto);
+        personEntity.setPassword(passwordEncoder.encode("12345"));
         personEntity.setStatus(true);
         personEntity.setRole(Role.ROLE_USER);
         PersonEntity result = personRepository.save(personEntity);
