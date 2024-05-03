@@ -14,3 +14,8 @@ console.log(existUser)
 if(existUser) {
     showToast("Mã thành viên đã được sử dụng.")
 }
+
+const success = params.get('success')
+if(success) {
+    showToast(success)
+}

@@ -104,6 +104,7 @@ public class PersonController {
             return "redirect:/admin/person/create";
         }
         personService.create(newPerson);
+        redirectAttributes.addAttribute("success", "Thêm tài khoản thành công");
         return "person/create";
     }
 
