@@ -27,6 +27,7 @@
         <table id="example" class="table table-hover nowrap" style="width: 100%">
             <thead>
             <tr class="fs-5">
+                <th>STT</th>
                 <th>Mã thiết bị</th>
                 <th>Tên thiết bị</th>
                 <th>Mô tả</th>
@@ -34,7 +35,8 @@
             </tr>
             </thead>
             <tbody>
-            <tr style="height: 50px" th:each="device : ${deviceList}">
+            <tr style="height: 50px" th:each="device, index  : ${deviceList}">
+                <td th:text="${index.index + 1}"></td>
                 <td th:text="${device.id}"></td>
                 <td th:text="${device.name}"></td>
                 <td th:text="${device.description}"></td>

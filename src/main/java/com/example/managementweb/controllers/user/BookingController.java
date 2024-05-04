@@ -1,17 +1,14 @@
-package com.example.managementweb.controllers;
+package com.example.managementweb.controllers.user;
 
 import com.example.managementweb.models.dtos.device.DeviceResponseDto;
 import com.example.managementweb.models.dtos.person.PersonResponseDto;
 import com.example.managementweb.models.dtos.usageInfo.UsageInfoBookingDto;
 import com.example.managementweb.models.dtos.usageInfo.UsageInfoBookingRequestDto;
-import com.example.managementweb.models.entities.Role;
 import com.example.managementweb.services.interfaces.IDeviceService;
 import com.example.managementweb.services.interfaces.IPenalizeService;
 import com.example.managementweb.services.interfaces.IPersonService;
 import com.example.managementweb.services.interfaces.IUsageInfoService;
-import com.example.managementweb.util.AppUtil;
 import com.example.managementweb.util.SecurityUtil;
-import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -20,57 +17,25 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Log4j2
-public class UserController {
+public class BookingController {
 
     IPersonService personService;
+
+    IPenalizeService penalizeService;
 
     IDeviceService deviceService;
 
     IUsageInfoService usageInfoService;
-
-    IPenalizeService penalizeService;
-
-    AppUtil appUtil;
-
-    @GetMapping("/")
-    public String home(
-            Model m,
-            @RequestParam(value = "filter",required = false) String filter
-    ){
-        String userId = SecurityUtil.getSessionUser();
-        log.info(userId);
-        if(userId != null) {
-            PersonResponseDto person = personService.findById(Long.valueOf(userId));
-            if (person.getRole() == Role.ROLE_ADMIN) {
-                return "redirect:/admin/person";
-            }
-            m.addAttribute("user", person.getName());
-            if (filter == null) {
-                List<DeviceResponseDto> devices = deviceService.findByStatusTrue();
-                m.addAttribute("deviceList", devices);
-            } else {
-                List<DeviceResponseDto> devices = deviceService.getAllByName(filter);
-                m.addAttribute("deviceList", devices);
-            }
-        }
-        return "user/index";
-    }
-
-
-    @GetMapping("/home")
-    public String admin(HttpSession httpSession){
-        log.info(SecurityUtil.getSessionUser());
-        return "admin/admin";
-    }
 
     @GetMapping("/booking/{deviceId}")
     public String bookingPage(
@@ -105,7 +70,7 @@ public class UserController {
 
     @PostMapping("/booking")
     public String borrowDevice(
-            @Valid @ModelAttribute("booking") UsageInfoBookingRequestDto request,
+            @Valid @ModelAttribute("booking") UsageInfoBookingRequestDto bookingRequest,
             BindingResult result,
             RedirectAttributes redirectAttributes,
             Model m
@@ -115,22 +80,21 @@ public class UserController {
         if(userId != null) {
             person = personService.findById(Long.valueOf(userId));
             m.addAttribute("user", person.getName());
-            request.setPersonId(person.getId());
+            bookingRequest.setPersonId(person.getId());
         }
         if (result.hasErrors()) {
             return "user/booking";
         }
         if (penalizeService.isPenalize(person.getId())) {
             redirectAttributes.addAttribute("penalize", true);
-            return "redirect:/booking/" + request.getDeviceId();
+            return "redirect:/booking/" + bookingRequest.getDeviceId();
         }
-        if (usageInfoService.existByBookingTime(request.getBookingTime(), request.getDeviceId()) ||
-                usageInfoService.existByBorrowTime(request.getBookingTime(), request.getDeviceId())) {
+        if (usageInfoService.existByBookingTime(bookingRequest.getBookingTime(), bookingRequest.getDeviceId()) ||
+                usageInfoService.existByBorrowTime(bookingRequest.getBookingTime(), bookingRequest.getDeviceId())) {
             redirectAttributes.addAttribute("failure", true);
-            return "redirect:/booking/" + request.getDeviceId();
+            return "redirect:/booking/" + bookingRequest.getDeviceId();
         }
-        UsageInfoBookingDto bookingResponse = usageInfoService.bookingDevice(request);
+        UsageInfoBookingDto bookingResponse = usageInfoService.bookingDevice(bookingRequest);
         return "redirect:/booking-success/" + bookingResponse.getId();
     }
-
 }

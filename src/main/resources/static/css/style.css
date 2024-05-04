@@ -208,3 +208,11 @@ body{
 .has-search .form-control {
     padding-left: 2.375rem;
 }
+
+.custom-border {
+    border-style: dashed;
+}
+
+.bg-input {
+    background-color: #F7F7F7;
+}

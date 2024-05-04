@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -43,6 +44,19 @@ public class PenalizeService implements IPenalizeService {
     public PenalizeResponseDto findById(Long id) {
         Optional<PenalizeEntity> penalizeEntity = penalizeRepository.findById(id);
         return penalizeEntity.map(penalizeMapper::toDto).orElse(null);
+    }
+
+    @Override
+    public List<PenalizeResponseDto> findAllByPerson(Long id) {
+        Optional<PersonEntity> personEntity = personRepository.findByIdAndStatusTrue(id);
+        return personEntity.map(person -> {
+            List<PenalizeEntity> penalizeEntities = personEntity.get().getPenalties()
+                    .stream()
+                    .toList();
+            return penalizeEntities.stream()
+                    .map(penalizeMapper::toDto)
+                    .collect(Collectors.toList());
+        }).orElse(new ArrayList<>());
     }
 
     @Override

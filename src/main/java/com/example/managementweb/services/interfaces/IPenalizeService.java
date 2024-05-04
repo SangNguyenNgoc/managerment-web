@@ -9,6 +9,8 @@ import java.util.List;
 public interface IPenalizeService {
     List<PenalizeResponseDto> findAll();
 
+    List<PenalizeResponseDto> findAllByPerson(Long id);
+
     PenalizeResponseDto findById(Long id);
 
     PenalizeResponseDto create(PenalizeCreateDto penalizeCreateDto);

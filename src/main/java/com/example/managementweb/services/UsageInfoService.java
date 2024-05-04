@@ -14,9 +14,11 @@ import com.example.managementweb.repositories.UsageInfoRepository;
 import com.example.managementweb.services.interfaces.IUsageInfoService;
 import com.example.managementweb.services.mappers.UsageInfoMapper;
 import com.example.managementweb.util.AppUtil;
+import jakarta.annotation.PostConstruct;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -85,6 +87,13 @@ public class UsageInfoService implements IUsageInfoService {
 
     @Override
     @Transactional
+    public void cancelBooking(Long id) {
+        Optional<UsageInfoEntity> usageInfoOptional = usageInfoRepository.findById(id);
+        usageInfoOptional.ifPresent(usageInfoRepository::delete);
+    }
+
+    @Override
+    @Transactional
     public UsageInfoBookingDto bookingDevice(UsageInfoBookingRequestDto requestDto) {
         //Thêm exception
         PersonEntity person = personRepository.findById(requestDto.getPersonId()).orElse(null);
@@ -134,5 +143,12 @@ public class UsageInfoService implements IUsageInfoService {
     @Override
     public boolean existByBorrowTime(LocalDateTime time, Long deviceId) {
         return usageInfoRepository.existsByBorrowTime(time.toLocalDate(), deviceId);
+    }
+
+    @Override
+    @PostConstruct
+    @Scheduled(fixedRate = 300000)
+    public void deleteUsageByTime() {
+        usageInfoRepository.deleteByBookingTimeBefore(LocalDateTime.now().minusHours(1));
     }
 }

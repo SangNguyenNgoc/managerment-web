@@ -33,7 +33,7 @@ document.getElementById('login-form').addEventListener('submit', event => {
     }
 });
 
-const exampleModal = document.getElementById('forgot-password-modal')
+const exampleModal = document.getElementById('forgotPasswordModal')
 exampleModal.addEventListener('shown.bs.modal',  (event) => {
     const forgotId = $('#forgot-id')
     forgotId.focus()

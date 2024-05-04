@@ -19,7 +19,8 @@
         <div class="col-2 me-4">
             <div class="col-12 nav-link gap-2 g-0 d-flex justify-content-end align-items-center pointer-event" id="navbarDropdown"
                  role="button"
-                 data-bs-toggle="dropdown">
+                 data-bs-toggle="dropdown"
+                 aria-haspopup="true" aria-expanded="false">
                 <div class="d-flex justify-content-end align-items-center fw-medium" th:text="${user}">
                 </div>
                 <div class="nar-icon">
@@ -27,7 +28,7 @@
                 </div>
             </div>
             <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="#">Thông tin</a>
+                <a class="dropdown-item" th:href="@{/profile}">Thông tin</a>
                 <a class="dropdown-item" th:href="@{/logout}">Đăng xuất</a>
             </div>
         </div>

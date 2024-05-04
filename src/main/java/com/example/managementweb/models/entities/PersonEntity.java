@@ -44,6 +44,9 @@ public class PersonEntity implements UserDetails {
     @Column(name = "verify_code", length = 6, nullable = true)
     private String verifyCode;
 
+    @Column(name = "change_email", length = 100, nullable = true)
+    private String changeEmail;
+
     @Column(name = "status", nullable = false)
     private Boolean status;
 

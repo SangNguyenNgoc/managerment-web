@@ -17,6 +17,8 @@ public interface IUsageInfoService {
 
     Boolean deleteBorrow(Long id);
 
+    void cancelBooking(Long id);
+
     UsageInfoBookingDto bookingDevice(UsageInfoBookingRequestDto requestDto);
 
     Boolean checkIn(Long personId);
@@ -26,4 +28,6 @@ public interface IUsageInfoService {
     boolean existByBookingTime(LocalDateTime time, Long deviceId);
 
     boolean existByBorrowTime(LocalDateTime time, Long deviceId);
+
+    void deleteUsageByTime();
 }

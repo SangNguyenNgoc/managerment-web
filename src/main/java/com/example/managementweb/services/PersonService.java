@@ -1,16 +1,17 @@
 package com.example.managementweb.services;
 
-import com.example.managementweb.models.dtos.person.PersonCreateDto;
-import com.example.managementweb.models.dtos.person.PersonResponseDto;
-import com.example.managementweb.models.dtos.person.PersonUpdateDto;
+import com.example.managementweb.models.dtos.person.*;
+import com.example.managementweb.models.entities.PenalizeEntity;
 import com.example.managementweb.models.entities.PersonEntity;
 import com.example.managementweb.models.entities.Role;
+import com.example.managementweb.models.entities.UsageInfoEntity;
 import com.example.managementweb.services.mappers.PersonMapper;
 import com.example.managementweb.repositories.PersonRepository;
 import com.example.managementweb.services.interfaces.IPersonService;
 import com.example.managementweb.util.AppUtil;
 import com.example.managementweb.util.EmailService;
 import com.example.managementweb.util.ObjectsValidator;
+import jakarta.annotation.PostConstruct;
 import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpSession;
 import lombok.AccessLevel;
@@ -26,9 +27,12 @@ import org.springframework.security.web.context.HttpSessionSecurityContextReposi
 import org.springframework.stereotype.Service;
 
 import java.io.UnsupportedEncodingException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 
@@ -84,10 +88,58 @@ public class PersonService implements IPersonService {
     }
 
     @Override
+    public PersonAndPenaltiesDto getPersonAndPenalizeById(Long id, LocalDate date) {
+        Optional<PersonEntity> personEntityOptional = personRepository.findById(id);
+        if (date != null && personEntityOptional.isPresent()) {
+            PersonEntity personEntity = personEntityOptional.get();
+            Set<PenalizeEntity> penalizes = personEntity.getPenalties().stream()
+                    .filter(penalizeEntity -> penalizeEntity.getDate().toLocalDate().equals(date))
+                    .collect(Collectors.toSet());
+            return personEntityOptional
+                    .map(person -> {
+                        person.setPenalties(penalizes);
+                        return personMapper.toDto(person);
+                    })
+                    .orElse(null);
+        }
+        return personEntityOptional
+                .map(personMapper::toDto)
+                .orElse(null);
+    }
+
+    @Override
+    public PersonAndUsageDto getPersonAndUsageById(Long id, LocalDate date) {
+        Optional<PersonEntity> personEntityOptional = personRepository.findById(id);
+        if (date != null && personEntityOptional.isPresent()) {
+            PersonEntity personEntity = personEntityOptional.get();
+            Set<UsageInfoEntity> usageInfos = personEntity.getUsageInfos().stream()
+                    .filter(usageInfo -> usageInfo.getBookingTime().toLocalDate().equals(date))
+                    .collect(Collectors.toSet());
+            return personEntityOptional
+                    .map(person -> {
+                        person.setUsageInfos(usageInfos);
+                        return personMapper.toPersonAndUsage(person);
+                    })
+                    .orElse(null);
+        }
+        return personEntityOptional
+                .map(personMapper::toPersonAndUsage)
+                .orElse(null);
+    }
+
+    @Override
     public PersonResponseDto findByIdAndStatusTrue(Long id) {
         Optional<PersonEntity> personEntity = personRepository.findByIdAndStatusTrue(id);
         return personEntity
                 .map(personMapper::toResponseDto)
+                .orElse(null);
+    }
+
+    @Override
+    public PersonUpdateDto findByIdAndStatusTrueToUpdate(Long id) {
+        Optional<PersonEntity> personEntity = personRepository.findByIdAndStatusTrue(id);
+        return personEntity
+                .map(personMapper::toUpdateDto)
                 .orElse(null);
     }
 
@@ -241,18 +293,86 @@ public class PersonService implements IPersonService {
                 // Giải công thức và trả về giá trị kết quả
                 FormulaEvaluator evaluator = cell.getSheet().getWorkbook().getCreationHelper().createFormulaEvaluator();
                 CellValue cellValue = evaluator.evaluate(cell);
-                switch (cellValue.getCellType()) {
-                    case BOOLEAN:
-                        return String.valueOf(cellValue.getBooleanValue());
-                    case NUMERIC:
-                        return String.valueOf(cellValue.getNumberValue());
-                    case STRING:
-                        return cellValue.getStringValue();
-                    default:
-                        return null;
-                }
+                return switch (cellValue.getCellType()) {
+                    case BOOLEAN -> String.valueOf(cellValue.getBooleanValue());
+                    case NUMERIC -> String.valueOf(cellValue.getNumberValue());
+                    case STRING -> cellValue.getStringValue();
+                    default -> null;
+                };
             default:
                 return null;
         }
     }
+
+    @Override
+    @Transactional
+    public void sendOtp(Long userId, String email) {
+        try {
+            String otp = appUtil.generateOtp(6);
+            emailService.sendEmail(
+                    email,
+                    "Thay đổi email",
+                    "Mã OTP để thay đổi email của bạn là " + otp + ", không nên chia sẻ OTP này cho bất cứ ai để đảm bảo an toàn cho tài khoản của bạn, OTP này chỉ có thời hạn trong 5 phút");
+            Optional<PersonEntity> personOptional = personRepository.findByIdAndStatusTrue(userId);
+            personOptional.ifPresent(person -> {
+                person.setChangeEmail(email + ";" + otp + ";" + LocalDateTime.now().plusMinutes(5));
+            });
+        } catch (MessagingException | UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public boolean checkOtp(Long userId, String otp) {
+        Optional<PersonEntity> personOptional = personRepository.findByIdAndStatusTrue(userId);
+        if(personOptional.isPresent()) {
+            PersonEntity personEntity = personOptional.get();
+            String[] data = personEntity.getChangeEmail().split(";");
+            if (otp.equals(data[1])) {
+                return LocalDateTime.now().isBefore(appUtil.dateFromString(data[2]));
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean checkPassword(Long userId, String password) {
+        Optional<PersonEntity> personOptional = personRepository.findByIdAndStatusTrue(userId);
+        if(personOptional.isPresent()) {
+            PersonEntity personEntity = personOptional.get();
+            return passwordEncoder.matches(password, personEntity.getPassword());
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    @Transactional
+    public void changeEmail(Long userId) {
+        Optional<PersonEntity> personOptional = personRepository.findByIdAndStatusTrue(userId);
+        if(personOptional.isPresent()) {
+            PersonEntity personEntity = personOptional.get();
+            String[] data = personEntity.getChangeEmail().split(";");
+            personEntity.setEmail(data[0]);
+        }
+    }
+
+    @Override
+    public boolean checkConfirmPassword(String password, String confirmPassword) {
+        return password.equals(confirmPassword);
+    }
+
+    @Override
+    @Transactional
+    public void changePassword(Long userId, String newPassword) {
+        Optional<PersonEntity> personOptional = personRepository.findByIdAndStatusTrue(userId);
+        if(personOptional.isPresent()) {
+            PersonEntity personEntity = personOptional.get();
+            personEntity.setPassword(passwordEncoder.encode(newPassword));
+        }
+    }
+
 }

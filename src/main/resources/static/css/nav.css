@@ -1,0 +1,16 @@
+.active {
+    border-bottom-width: 2px;
+    color: #1E1B60;
+    border-color: rgba(30, 27, 96, 0.5);
+    border-bottom-style: solid;
+}
+
+.nav-item:hover {
+    border-bottom-width: 2px;
+    border-color: rgba(30, 27, 96, 0.3);
+    border-bottom-style: solid;
+}
+
+.h-50px {
+    height: 50px;
+}

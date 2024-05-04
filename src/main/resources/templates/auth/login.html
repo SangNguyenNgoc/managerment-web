@@ -17,29 +17,7 @@
     </title>
 </head>
 <body>
-<div class="modal fade" id="forgot-password-modal" tabindex="-1" aria-labelledby="forgot-password-modal-label" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="forgot-password-modal-label">Cấp lại mật khẩu</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                Hãy nhập mã thành viên của bạn, chúng tôi sẽ cấp lại mật khẩu cho tài khoản dựa vào địa chỉ email được đăng ký.
-                <form th:action="@{/forgot-password}" method="post">
-                    <div class="mb-3">
-                        <label for="forgot-id" class="col-form-label">Mã thành viên:</label>
-                        <input type="text" class="form-control" id="forgot-id" name="forgot-id" autofocus>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-                        <button type="submit" class="btn btn-primary">Cấp lại</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
+
 <div class="position-fixed top-0 end-0 p-3" style="z-index: 11">
     <div aria-atomic="true" aria-live="assertive" class="toast align-items-center bg-warning border-0"
          id="login-error-toast"
@@ -85,11 +63,34 @@
                 <div>
                     <label class="form-label" for="password">Mật khẩu:</label>
                             <input class="form-control" id="password" name="password" type="password">
-                    <label id="forgot-btn" data-bs-toggle="modal" data-bs-target="#forgot-password-model" class="font-family-Arimo text-end mb-0" style="font-size: 12px; width:100%; cursor: pointer">
+                    <label id="forgot-btn" data-bs-toggle="modal" data-bs-target="#forgotPasswordModal" class="font-family-Arimo text-end mb-0" style="font-size: 12px; width:100%; cursor: pointer">
                         Quên mật khẩu?</label>
                 </div>
                 <button class="container col-4 btn btn-primary mt-5">Đăng nhập</button>
             </form>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="forgotPasswordModal" tabindex="-1" aria-labelledby="forgotPasswordModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="forgotPasswordModalLabel">Cấp lại mật khẩu</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Hãy nhập mã thành viên của bạn, chúng tôi sẽ cấp lại mật khẩu cho tài khoản dựa vào địa chỉ email được đăng ký.
+                <form th:action="@{/forgot-password}" method="post">
+                    <div class="mb-3">
+                        <label for="forgot-id" class="col-form-label">Mã thành viên:</label>
+                        <input type="text" class="form-control" id="forgot-id" name="forgot-id" autofocus>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                        <button type="submit" class="btn btn-primary">Cấp lại</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </div>
