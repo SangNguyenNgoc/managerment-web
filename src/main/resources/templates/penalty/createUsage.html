@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.datatables.net/2.0.5/css/dataTables.bootstrap5.css"
+    />
+  </head>
+  <style>
+    /* Custom CSS for hover effect */
+    .custom-cursor-pointer:hover {
+      cursor: pointer;
+      background-color: #5d60ef;
+      color: white;
+      transition: 200ms linear;
+    }
+  </style>
+  <body>
+    <div class="container-fluid">
+      <div class="row">
+        <!-- Sidebar -->
+        <div class="col-2 p-4">
+          <div
+            class="d-flex flex-column justify-content-center align-items-center gap-3"
+          >
+            <div
+              class="rounded-circle text-white d-flex justify-content-center align-items-center"
+              style="
+                width: 50px;
+                height: 50px;
+                background-color: #5d60ef;
+                margin-bottom: 60px;
+              "
+            >
+              S
+            </div>
+            <div
+              class="d-flex flex-column gap-3 text-center fs-6"
+              style="width: 140px"
+            >
+              <div
+                class="custom-cursor-pointer px-3 py-2"
+                style="border-radius: 12px"
+              >
+                Person
+              </div>
+              <div
+                class="custom-cursor-pointer px-3 py-2"
+                style="border-radius: 12px"
+              >
+                Device
+              </div>
+              <div
+                class="custom-cursor-pointer px-3 py-2 text-white"
+                style="border-radius: 12px; background-color: #5d60ef"
+              >
+                Penalty
+              </div>
+              <div
+                class="custom-cursor-pointer px-3 py-2"
+                style="border-radius: 12px"
+              >
+                Usage
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="col-10 p-0">
+          <div
+            class="d-flex justify-content-between align-items-center px-5 py-2"
+          >
+            <div class="text-primary fs-5 fw-bold" style="color: #1e1b60">
+              Admin
+            </div>
+            <div class="input-group" style="width: 200px">
+              <input type="text" class="form-control" placeholder="Search..." />
+              <button class="btn btn-primary">
+                <i class="bi bi-search"></i>
+              </button>
+            </div>
+            <div
+              class="bg-secondary rounded-circle"
+              style="width: 40px; height: 40px"
+            ></div>
+          </div>
+          <div class="px-5 bg-light">
+            <div class="py-4" style="cursor: pointer">
+              <div class="text-muted fs-6 fw-medium">Danh sách</div>
+            </div>
+
+            <div
+              class="bg-white shadow"
+              style="border-radius: 8px; padding: 22px 32px 22px 32px"
+            >
+              <div class="fs-5 fw-bold mb-3" style="color: #1e1b60">
+                Devices
+              </div>
+              <!-- Table Header -->
+              <table
+                id="createUsageTable"
+                class="table table-striped"
+                style="width: 100%"
+              >
+                <thead>
+                  <tr>
+                    <th style="color: #808080; font-weight: 400">ID</th>
+                    <th style="color: #808080; font-weight: 400">Tên dùng</th>
+                    <th style="color: #808080; font-weight: 400">Mô tả</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Tiger Nixon</td>
+                    <td>System Architect</td>
+                    <td>Edinburgh</td>
+                  </tr>
+                  <tr>
+                    <td>Garrett Winters</td>
+                    <td>Accountant</td>
+                    <td>Tokyo</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.datatables.net/2.0.5/js/dataTables.js"></script>
+  <script src="https://cdn.datatables.net/2.0.5/js/dataTables.bootstrap5.js"></script>
+  <script>
+    new DataTable("#createUsageTable");
+    // $(document).ready(function () {
+    //   // Initialize DataTable
+    //   $("#myDataTable").DataTable({
+    //     paging: true, // Enable pagination
+    //     searching: true, // Enable search
+    //     ordering: true, // Enable sorting
+    //     info: true, // Show information
+    //     lengthChange: false, // Disable the "Show X entries" dropdown
+    //   });
+    // });
+  </script>
+</html>
