@@ -31,18 +31,19 @@
         <a class="btn btn-primary" role="button" th:href="@{/admin/device/create}">Tạo mới</a>
     </div>
     <div class="bg-white border p-3" style="border-radius: 10px;">
-        <h4 class="pb-3">Users</h4>
-        <table id="example" class="table table-striped nowrap" style="width: 100%">
+        <table id="devices" class="table table-striped nowrap" style="width: 100%">
             <thead>
             <tr>
-                <th>ID</th>
-                <th>Tên</th>
+                <th>STT</th>
+                <th>Mã thiết bị</th>
+                <th>Tên thiết bị</th>
                 <th>Mô Tả</th>
                 <th>Chức năng</th>
             </tr>
             </thead>
             <tbody>
-            <tr th:each="device : ${list}">
+            <tr th:each="device, index : ${list}">
+                <td th:text="${index.index + 1}">ID</td>
                 <td th:text="${device.id}">ID</td>
                 <td th:text="${device.name}">Name</td>
                 <td th:text="${device.description}">Department</td>
@@ -60,15 +61,11 @@
     </div>
     <script>
         $(document).ready(function () {
-            $("#example").DataTable(
-                {
-                    searching: false,
+            $("#devices").DataTable({
                     responsive: true,
+                    lengthChange: false,
                     columnDefs: [{width: '10%', targets: 3}]
-                });
-            var entries = $(".dataTables_length");
-            entries.appendTo(".col-sm-12.col-md-6");
-            $(".dataTables_length:first").remove();
+            });
             loadingEle.hide()
         });
     </script>

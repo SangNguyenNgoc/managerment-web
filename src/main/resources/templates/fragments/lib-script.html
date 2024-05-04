@@ -18,7 +18,7 @@
 
         $(".nav-link").removeClass("active");
 
-        $(".nav-link").slice(1).each(function () {
+        $(".nav-link").each(function () {
             var href = $(this).attr("href");
 
             if (href.endsWith(pageName)) {

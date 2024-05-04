@@ -2,25 +2,19 @@ package com.example.managementweb.services;
 
 import com.example.managementweb.models.dtos.person.*;
 import com.example.managementweb.models.entities.PenalizeEntity;
-import com.example.managementweb.models.dtos.person.PersonAddDto;
-import com.example.managementweb.models.dtos.person.PersonCreateDto;
-import com.example.managementweb.models.dtos.person.PersonResponseDto;
-import com.example.managementweb.models.dtos.person.PersonUpdateDto;
 import com.example.managementweb.models.entities.PersonEntity;
 import com.example.managementweb.models.entities.Role;
 import com.example.managementweb.models.entities.UsageInfoEntity;
-import com.example.managementweb.services.mappers.PersonMapper;
 import com.example.managementweb.repositories.PersonRepository;
 import com.example.managementweb.services.interfaces.IPersonService;
+import com.example.managementweb.services.mappers.PersonMapper;
 import com.example.managementweb.util.AppUtil;
 import com.example.managementweb.util.EmailService;
 import com.example.managementweb.util.ObjectsValidator;
-import jakarta.annotation.PostConstruct;
 import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpSession;
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
+import org.apache.poi.ss.usermodel.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -29,7 +23,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -38,13 +35,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-
-import org.apache.poi.ss.usermodel.*;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
 
 @Service
 @RequiredArgsConstructor
@@ -222,7 +212,7 @@ public class PersonService implements IPersonService {
             Sheet sheet = workbook.getSheetAt(0);
             List<PersonEntity> personEntities = new ArrayList<>();
             for (Row row : sheet) {
-                if(row.getCell(0) == null) {
+                if (row.getCell(0) == null) {
                     break;
                 }
                 if (row.getRowNum() > 0) {
@@ -234,7 +224,7 @@ public class PersonService implements IPersonService {
                     }
                 }
             }
-            if(!personEntities.isEmpty()) {
+            if (!personEntities.isEmpty()) {
                 personRepository.saveAll(personEntities);
             }
             return true;
@@ -329,7 +319,7 @@ public class PersonService implements IPersonService {
     @Override
     public boolean checkOtp(Long userId, String otp) {
         Optional<PersonEntity> personOptional = personRepository.findByIdAndStatusTrue(userId);
-        if(personOptional.isPresent()) {
+        if (personOptional.isPresent()) {
             PersonEntity personEntity = personOptional.get();
             String[] data = personEntity.getChangeEmail().split(";");
             if (otp.equals(data[1])) {
@@ -345,7 +335,7 @@ public class PersonService implements IPersonService {
     @Override
     public boolean checkPassword(Long userId, String password) {
         Optional<PersonEntity> personOptional = personRepository.findByIdAndStatusTrue(userId);
-        if(personOptional.isPresent()) {
+        if (personOptional.isPresent()) {
             PersonEntity personEntity = personOptional.get();
             return passwordEncoder.matches(password, personEntity.getPassword());
         } else {
@@ -357,7 +347,7 @@ public class PersonService implements IPersonService {
     @Transactional
     public void changeEmail(Long userId) {
         Optional<PersonEntity> personOptional = personRepository.findByIdAndStatusTrue(userId);
-        if(personOptional.isPresent()) {
+        if (personOptional.isPresent()) {
             PersonEntity personEntity = personOptional.get();
             String[] data = personEntity.getChangeEmail().split(";");
             personEntity.setEmail(data[0]);
@@ -373,7 +363,7 @@ public class PersonService implements IPersonService {
     @Transactional
     public void changePassword(Long userId, String newPassword) {
         Optional<PersonEntity> personOptional = personRepository.findByIdAndStatusTrue(userId);
-        if(personOptional.isPresent()) {
+        if (personOptional.isPresent()) {
             PersonEntity personEntity = personOptional.get();
             personEntity.setPassword(passwordEncoder.encode(newPassword));
         }

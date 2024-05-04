@@ -30,7 +30,7 @@ public interface IPersonService {
 
     PersonUpdateDto findByIdAndStatusTrueToUpdate(Long id);
 
-    PersonResponseDto create(PersonCreateDto personCreateDto);
+    PersonResponseDto create(PersonAddDto personCreateDto);
 
     PersonResponseDto register(PersonCreateDto personCreateDto);
 

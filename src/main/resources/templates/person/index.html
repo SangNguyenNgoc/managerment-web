@@ -28,21 +28,22 @@
         <a class="btn btn-primary" role="button" th:href="@{/admin/person/create}">Tạo mới</a>
     </div>
     <div class="bg-white border p-3 col-12" style="border-radius: 10px;">
-        <h4 class="pb-3">Users</h4>
-        <table id="example" class="table table-striped nowrap" style="width: 100%">
+        <table id="persons" class="table table-striped nowrap" style="width: 100%">
             <thead>
             <tr>
-                <th>ID</th>
+                <th>STT</th>
+                <th>Mã thành viên</th>
                 <th>Họ Tên</th>
                 <th>Khoa</th>
-                <th>Chuyên Ngành</th>
+                <th>CN</th>
                 <th>Email</th>
                 <th>Điện thoại</th>
                 <th>Chức năng</th>
             </tr>
             </thead>
             <tbody>
-            <tr th:each="person : ${list}">
+            <tr th:each="person, index : ${list}">
+                <td th:text="${index.index + 1}">ID</td>
                 <td th:text="${person.id}">ID</td>
                 <td th:text="${person.name}">Name</td>
                 <td th:text="${person.department}">Department</td>
@@ -60,13 +61,9 @@
     </div>
     <script>
         $(document).ready(function () {
-            $("#example").DataTable({
-                    searching: false,
+            $("#persons").DataTable({
                     lengthChange: false,
-                });
-            var entries = $(".dataTables_length");
-            entries.appendTo(".col-sm-12.col-md-6");
-            $(".dataTables_length:first").remove();
+            });
             loadingEle.hide()
         });
     </script>

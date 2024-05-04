@@ -84,8 +84,6 @@ public interface PersonMapper {
 
     PersonEntity toEntity(PersonAddDto personAddDto);
 
-    PersonAddDto toDto(PersonEntity personEntity);
-
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     PersonEntity partialUpdate(PersonAddDto personAddDto, @MappingTarget PersonEntity personEntity);
 }
