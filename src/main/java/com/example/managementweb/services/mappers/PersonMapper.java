@@ -81,4 +81,11 @@ public interface PersonMapper {
                 .collect(Collectors.toList());
         dto.setUsageInfos(afterSort);
     }
+
+    PersonEntity toEntity(PersonAddDto personAddDto);
+
+    PersonAddDto toDto(PersonEntity personEntity);
+
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    PersonEntity partialUpdate(PersonAddDto personAddDto, @MappingTarget PersonEntity personEntity);
 }

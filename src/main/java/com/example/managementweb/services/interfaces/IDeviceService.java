@@ -27,4 +27,6 @@ public interface IDeviceService {
     boolean checkUseAndBooking(DeviceEntity device, LocalDate date);
 
     List<DeviceResponseDto> getAllByName(String name);
+
+    Boolean eisistById(Long id);
 }

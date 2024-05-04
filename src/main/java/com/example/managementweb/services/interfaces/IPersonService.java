@@ -1,5 +1,9 @@
 package com.example.managementweb.services.interfaces;
 
+import com.example.managementweb.models.dtos.person.PersonAddDto;
+import com.example.managementweb.models.dtos.person.PersonCreateDto;
+import com.example.managementweb.models.dtos.person.PersonResponseDto;
+import com.example.managementweb.models.dtos.person.PersonUpdateDto;
 import com.example.managementweb.models.dtos.person.*;
 import com.example.managementweb.models.entities.PersonEntity;
 import jakarta.servlet.http.HttpServletRequest;

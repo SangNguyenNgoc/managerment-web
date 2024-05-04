@@ -1,17 +1,19 @@
 package com.example.managementweb.controllers;
 
+import com.example.managementweb.models.dtos.person.PersonAddDto;
+import com.example.managementweb.models.dtos.person.PersonCreateDto;
 import com.example.managementweb.models.dtos.person.PersonResponseDto;
-import com.example.managementweb.models.entities.PersonEntity;
+import com.example.managementweb.models.dtos.person.PersonUpdateDto;
 import com.example.managementweb.models.entities.Role;
 import com.example.managementweb.services.interfaces.IPersonService;
 import com.example.managementweb.util.SecurityUtil;
-import lombok.AccessLevel;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.*;
 
@@ -42,7 +44,7 @@ public class PersonController {
 
     @GetMapping("")
     public String index(Model model){
-        model.addAttribute("list", peopleList);
+        model.addAttribute("list", personService.findByStatusTrue());
         String userId = SecurityUtil.getSessionUser();
         if(userId != null) {
             PersonResponseDto personResponseDto = personService.findByIdAndStatusTrue(Long.valueOf(userId));
@@ -53,39 +55,68 @@ public class PersonController {
 
     @GetMapping("/detail/{id}")
     public String detail(@PathVariable("id") Long id, Model model){
-        Optional<PersonResponseDto> personOptional = peopleList.stream()
-                .filter(person -> person.getId().equals(id))
-                .findFirst();
+        PersonResponseDto person = personService.findById(id);
 
-        if (personOptional.isPresent()) {
-            PersonResponseDto person = personOptional.get();
+        if (person != null) {
              model.addAttribute("person", person);
         } else {
         }
-
         return "person/detail";
     }
+//    @GetMapping("/edit")
+//    public String edit( @ModelAttribute("person") PersonUpdateDto editedPerson) {
+//        return "person/detail";
+//    }
     @PostMapping("/edit")
-    public String edit(@ModelAttribute("person") PersonResponseDto editedPerson) {
-        System.out.println(editedPerson);
-        for (int i = 0; i < peopleList.size(); i++) {
-            PersonResponseDto person = peopleList.get(i);
-            if (person.getId().equals(editedPerson.getId())) {
-                peopleList.set(i, editedPerson);
-                break;
-            }
+    public String edit( @Valid @ModelAttribute("person") PersonUpdateDto editedPerson,
+                        BindingResult result,
+                        RedirectAttributes redirectAttributes) {
+        if (result.hasErrors()) {
+            System.out.println(result.getAllErrors());
+            return "person/detail";
         }
+        if (personService.update(editedPerson) == null) {
+            redirectAttributes.addAttribute("existUser", "false");
+            redirectAttributes.addFlashAttribute("person", editedPerson);
+            return "redirect:/admin/person/detail/" + editedPerson.getId();
+        }
+        redirectAttributes.addAttribute("success", "Cập nhật thành công");
         return "redirect:/admin/person/detail/" + editedPerson.getId();
     }
+
     @GetMapping("/create")
-    public String create(Model model){
-        model.addAttribute("person", new PersonResponseDto());
+    public String edit( @ModelAttribute("person") PersonResponseDto person) {
         return "person/create";
     }
+
     @PostMapping("/create")
-    public String create(@ModelAttribute("person") PersonResponseDto newPerson) {
-        newPerson.setId(peopleList.get(peopleList.size() - 1).getId() + 1);
-        peopleList.add(newPerson);
+    public String create(
+            @Valid @ModelAttribute("person") PersonAddDto newPerson,
+            BindingResult result,
+            RedirectAttributes redirectAttributes
+    ) {
+        if (result.hasErrors()) {
+            return "person/create";
+        }
+        if (personService.existById(Long.valueOf(newPerson.getId()))) {
+            redirectAttributes.addAttribute("existUser", "true");
+            redirectAttributes.addFlashAttribute("person", newPerson);
+            return "redirect:/admin/person/create";
+        }
+        personService.create(newPerson);
+        redirectAttributes.addAttribute("success", "Thêm tài khoản thành công");
+        return "person/create";
+    }
+
+    @GetMapping("/delete/{id}")
+    public String delete(@PathVariable("id") Long id,
+                         RedirectAttributes redirectAttributes
+    ){
+        if(personService.delete(id) == null){
+            redirectAttributes.addAttribute("error", "not found");
+            return "redirect:/admin/person/detail/" + id;
+        }
+        redirectAttributes.addAttribute("success", "Xoá thành công tài khoản " + id);
         return "redirect:/admin/person";
     }
-    }
+}

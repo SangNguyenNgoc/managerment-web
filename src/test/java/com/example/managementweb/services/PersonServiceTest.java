@@ -37,17 +37,6 @@ class PersonServiceTest {
 
     @Test
     void create() {
-        PersonCreateDto personCreateDto = PersonCreateDto.builder()
-                .id("3121420417")
-                .name("Hulk Smash")
-                .email("hulksmash88@gmail.com")
-                .password("3121410417")
-                .phoneNumber("0916921132")
-                .department("CNTT")
-                .profession("KTPM")
-                .build();
-        PersonResponseDto result = personService.create(personCreateDto);
-        System.out.println(appUtil.toJson(result));
     }
 
     @Test

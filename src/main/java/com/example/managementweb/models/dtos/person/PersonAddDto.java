@@ -1,33 +1,29 @@
 package com.example.managementweb.models.dtos.person;
 
-import com.example.managementweb.models.entities.PersonEntity;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
-import lombok.*;
+import lombok.Value;
 
 import java.io.Serializable;
 
 /**
- * DTO for {@link PersonEntity}
+ * DTO for {@link com.example.managementweb.models.entities.PersonEntity}
  */
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class PersonUpdateDto implements Serializable {
+@Value
+public class PersonAddDto implements Serializable {
     @NotBlank(message = "Mã thành viên không được để trống")
     @Pattern(regexp = "\\d{10}", message = "Mã thành viên chỉ được chứa 10 ký tự và chỉ được là ký tự số")
     private String id;
+
+    @Email(message = "Email sai định dạng")
+    private String email;
 
     @NotBlank(message = "Tên người dùng không được để trống")
     private String name;
 
     @NotBlank(message = "Khoa không được để trống")
     private String department;
-
-    @Email(message = "Email sai định dạng")
-    private String email;
 
     @NotBlank(message = "Ngành không được để trống")
     private String profession;
