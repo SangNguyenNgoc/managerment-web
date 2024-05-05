@@ -15,7 +15,7 @@ if(success) {
     showToast(success)
 }
 
-const error = params.get('existDevice')
+const error = params.get('error')
 console.log(error)
 if(error) {
     showToast(error)

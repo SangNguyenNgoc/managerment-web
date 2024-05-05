@@ -1,5 +1,6 @@
 package com.example.managementweb.services.mappers;
 
+import com.example.managementweb.models.dtos.usageInfo.CheckInResponseDto;
 import com.example.managementweb.models.dtos.usageInfo.UsageInfoBookingDto;
 import com.example.managementweb.models.dtos.usageInfo.UsageInfoBookingRequestDto;
 import com.example.managementweb.models.dtos.usageInfo.UsageInfoBorrowDto;
@@ -8,7 +9,7 @@ import org.mapstruct.*;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = {PersonMapper.class})
 public interface UsageInfoMapper {
     UsageInfoEntity toEntity(UsageInfoBorrowDto usageInfoBorrowDto);
 
@@ -19,6 +20,8 @@ public interface UsageInfoMapper {
     UsageInfoBorrowDto toBorrowDto(UsageInfoEntity usageInfoEntity);
 
     List<UsageInfoBorrowDto> toDtoList(List<UsageInfoEntity> usageInfoEntities);
+
+    List<CheckInResponseDto> toCheckInDtoList(List<UsageInfoEntity> usageInfoEntities);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     UsageInfoEntity partialUpdate(UsageInfoBorrowDto usageInfoBorrowDto, @MappingTarget UsageInfoEntity usageInfoEntity);
@@ -41,4 +44,14 @@ public interface UsageInfoMapper {
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     UsageInfoEntity partialUpdate(UsageInfoBookingRequestDto usageInfoBookingRequestDto, @MappingTarget UsageInfoEntity usageInfoEntity);
+
+    UsageInfoEntity toEntity(CheckInResponseDto checkInResponseDto);
+
+    @Mappings({
+            @Mapping(target = "checkinTime", source = "checkinTime", dateFormat = "dd-MM-yyyy HH:mm")
+    })
+    CheckInResponseDto toDto(UsageInfoEntity usageInfoEntity);
+
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    UsageInfoEntity partialUpdate(CheckInResponseDto checkInResponseDto, @MappingTarget UsageInfoEntity usageInfoEntity);
 }

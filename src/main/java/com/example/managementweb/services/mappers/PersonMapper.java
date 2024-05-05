@@ -63,15 +63,15 @@ public interface PersonMapper {
     @AfterMapping
     default void mapUsageDates(@MappingTarget PersonAndUsageDto dto) {
         dto.getUsageInfos().forEach(usageInfoDto -> {
-            if(usageInfoDto.getBookingTime() != null) {
+            if (usageInfoDto.getBookingTime() != null) {
                 LocalDateTime bookingTime = LocalDateTime.parse(usageInfoDto.getBookingTime());
                 usageInfoDto.setBookingTime(bookingTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm")));
             }
-            if(usageInfoDto.getBorrowTime() != null) {
+            if (usageInfoDto.getBorrowTime() != null) {
                 LocalDateTime borrowTime = LocalDateTime.parse(usageInfoDto.getBorrowTime());
                 usageInfoDto.setBorrowTime(borrowTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm")));
             }
-            if(usageInfoDto.getReturnTime() != null) {
+            if (usageInfoDto.getReturnTime() != null) {
                 LocalDateTime returnTime = LocalDateTime.parse(usageInfoDto.getReturnTime());
                 usageInfoDto.setReturnTime(returnTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm")));
             }
@@ -86,4 +86,9 @@ public interface PersonMapper {
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     PersonEntity partialUpdate(PersonAddDto personAddDto, @MappingTarget PersonEntity personEntity);
+
+    PersonEntity toEntity(PersonResponseDto personResponseDto);
+
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    PersonEntity partialUpdate(PersonResponseDto personResponseDto, @MappingTarget PersonEntity personEntity);
 }

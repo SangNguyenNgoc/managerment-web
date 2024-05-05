@@ -1,6 +1,7 @@
 package com.example.managementweb.services;
 
 import com.example.managementweb.event.DeleteBookingTask;
+import com.example.managementweb.models.dtos.usageInfo.CheckInResponseDto;
 import com.example.managementweb.models.dtos.usageInfo.UsageInfoBookingDto;
 import com.example.managementweb.models.dtos.usageInfo.UsageInfoBookingRequestDto;
 import com.example.managementweb.models.dtos.usageInfo.UsageInfoBorrowDto;
@@ -61,6 +62,11 @@ public class UsageInfoService implements IUsageInfoService {
     @Override
     public List<UsageInfoBorrowDto> getAllBorrow() {
         return usageInfoMapper.toDtoList(usageInfoRepository.findAllBorrow());
+    }
+
+    @Override
+    public List<CheckInResponseDto> getAllCheckIn() {
+        return usageInfoMapper.toCheckInDtoList(usageInfoRepository.findAllCheckIn());
     }
 
     @Override

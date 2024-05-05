@@ -59,7 +59,7 @@ public class DeviceController {
             return "device/detail";
         }
         if (iDeviceService.update(edited) == null) {
-            redirectAttributes.addAttribute("existUser", "false");
+            redirectAttributes.addAttribute("error", "false");
             redirectAttributes.addFlashAttribute("person", edited);
             return "redirect:/admin/device/detail/" + edited.getId();
         }
@@ -81,7 +81,7 @@ public class DeviceController {
             return "device/create";
         }
         if (iDeviceService.eisistById(appUtil.parseId(newDevice.getId()))) {
-            redirectAttributes.addAttribute("existDevice", "thiết bị đã tồn tại");
+            redirectAttributes.addAttribute("error", "thiết bị đã tồn tại");
             redirectAttributes.addFlashAttribute("device", newDevice);
             return "redirect:/admin/device/create";
         }

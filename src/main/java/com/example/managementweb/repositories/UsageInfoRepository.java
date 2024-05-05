@@ -30,6 +30,11 @@ public interface UsageInfoRepository extends JpaRepository<UsageInfoEntity, Long
 
     @Query("SELECT u " +
             "FROM UsageInfoEntity u " +
+            "WHERE u.checkinTime IS NOT NULL")
+    List<UsageInfoEntity> findAllCheckIn();
+
+    @Query("SELECT u " +
+            "FROM UsageInfoEntity u " +
             "WHERE u.id = :id " +
             "AND u.returnTime IS NULL")
     UsageInfoEntity findByIdForReturn(Long id);
