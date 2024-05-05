@@ -30,7 +30,7 @@ class UsageInfoServiceTest {
 
     @Test
     void testReturn(){
-        UsageInfoBorrowDto usageInfoBorrowDto = usageInfoService.returnDevice("19");
+        UsageInfoBorrowDto usageInfoBorrowDto = usageInfoService.returnDevice(19L);
         System.out.println(appUtil.toJson(usageInfoBorrowDto));
     }
 

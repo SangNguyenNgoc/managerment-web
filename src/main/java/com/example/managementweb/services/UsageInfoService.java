@@ -65,8 +65,8 @@ public class UsageInfoService implements IUsageInfoService {
 
     @Override
     @Transactional
-    public UsageInfoBorrowDto returnDevice(String id) {
-        UsageInfoEntity usageInfo = usageInfoRepository.findByIdForReturn(appUtil.parseId(id));
+    public UsageInfoBorrowDto returnDevice(Long id) {
+        UsageInfoEntity usageInfo = usageInfoRepository.findByIdForReturn(id);
         if (usageInfo == null){
             return null;
         }

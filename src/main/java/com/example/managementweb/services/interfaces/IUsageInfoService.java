@@ -13,7 +13,7 @@ public interface IUsageInfoService {
 
     List<UsageInfoBorrowDto> getAllBorrow();
 
-    UsageInfoBorrowDto returnDevice(String Id);
+    UsageInfoBorrowDto returnDevice(Long Id);
 
     Boolean deleteBorrow(Long id);
 
