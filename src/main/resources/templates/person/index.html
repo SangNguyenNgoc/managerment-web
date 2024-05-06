@@ -62,7 +62,8 @@
     <script>
         $(document).ready(function () {
             $("#persons").DataTable({
-                    lengthChange: false,
+                lengthChange: false,
+                select: true
             });
             loadingEle.hide()
         });

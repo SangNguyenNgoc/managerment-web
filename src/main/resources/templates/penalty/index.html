@@ -25,7 +25,6 @@
 
 <div layout:fragment="content">
     <div class="d-flex justify-content-between align-items-center py-4">
-        <!--            <h4>Danh Sách</h4>-->
         <nav aria-label="breadcrumb" style="--bs-breadcrumb-divider: '>';">
             <ol class="breadcrumb mb-0 font-weight-bold" style="font-size: 20px">
                 <li class="breadcrumb-item">
@@ -62,7 +61,7 @@
                 <td th:text="${penalty.type}">type</td>
                 <td th:text="${penalty.payment}">payment</td>
                 <td th:text="${penalty.date}">date</td>
-                <td th:text="${penalty.status}">status</td>
+                <td th:text="${penalty.status == true ? 'Đang thi hành' : 'Đã hoàn thành'}">status</td>
                 <td class="text-center">
                     <a th:href="@{/admin/penalty/detail/{id}(id=${penalty.id})}">
                         <i class="fa-solid fa-eye"></i>
@@ -73,7 +72,10 @@
         </table>
     </div>
     <script>
-        new DataTable("#penaltyTable");
+        $("#penaltyTable").DataTable({
+            responsive: true,
+            lengthChange: false,
+        });
     </script>
     <script>
         $(document).ready(function () {

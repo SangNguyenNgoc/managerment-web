@@ -34,8 +34,18 @@
                 </div>
               </div>
             </div>
+
             <div class="py-4" style="cursor: pointer">
-              <a class="btn" role="button" th:href="@{/admin/penalty}">Quay lại</a>
+              <nav aria-label="breadcrumb" style="--bs-breadcrumb-divider: '>';">
+                <ol class="breadcrumb mb-0 font-weight-bold" style="font-size: 20px">
+                  <li class="breadcrumb-item">
+                    <a class="text-decoration-none" th:href="@{/admin/penalty}">
+                      Quản lý phiếu phạt
+                    </a>
+                  </li>
+                  <li aria-current="page" class="breadcrumb-item active">Chi tiết</li>
+                </ol>
+              </nav>
             </div>
 
             <div
@@ -43,9 +53,7 @@
               style="border-radius: 8px; padding: 22px 32px 22px 32px"
             >
               <div class="border-bottom pb-3">
-                <div class="fs-5 fw-bold" style="color: #1e1b60">
-                  Detail Penalty
-                </div>
+                <a th:href="@{/admin/penalty}" role="button" class="link-underline" >Quay lại</a>
               </div>
               <form class="" th:action="@{/admin/penalty/edit/{id}(id=${penalty.id})}" method="post" th:object="${penalty}">
                 <div class="row">

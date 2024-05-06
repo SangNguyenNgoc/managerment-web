@@ -146,7 +146,7 @@ public class ProfileController {
         if(userId != null) {
             PersonAndUsageDto person = personService.getPersonAndUsageById(Long.valueOf(userId), date);
             m.addAttribute("user", person.getName());
-            m.addAttribute("usages", person.getUsageInfos());
+            m.addAttribute("usages", person.getUsageInfos().stream().filter(item -> item.getDevice() != null));
         }
         return "user/usage";
     }

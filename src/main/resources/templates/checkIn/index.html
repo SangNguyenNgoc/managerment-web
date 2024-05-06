@@ -22,11 +22,11 @@
         <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
             <ol class="breadcrumb mb-0 font-weight-bold" style="font-size: 20px">
                 <li class="breadcrumb-item">
-                    <a class="text-decoration-none" th:href="@{/admin/device}">
-                        Quản lý thiết bị
+                    <a class="text-decoration-none" th:href="@{/admin/checkIn}">
+                        Quản lý người dùng
                     </a>
                 </li>
-                <li class="breadcrumb-item active" aria-current="page">Danh sách</li>
+                <li class="breadcrumb-item active" aria-current="page">Check In</li>
             </ol>
         </nav>
         <a class="btn btn-primary" role="button" id="check-in" th:href="@{/admin/checkIn/create}">Check in</a>
@@ -56,7 +56,6 @@
             $("#devices").DataTable({
                 responsive: true,
                 lengthChange: false,
-                columnDefs: [{width: '10%', targets: 3}]
             });
             loadingEle.hide()
         });
