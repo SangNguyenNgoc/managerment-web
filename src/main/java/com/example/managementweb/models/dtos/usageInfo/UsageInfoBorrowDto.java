@@ -9,10 +9,10 @@ import java.time.LocalDateTime;
  * DTO for {@link com.example.managementweb.models.entities.UsageInfoEntity}
  */
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class UsageInfoBorrowDto implements Serializable {
+    Long id;
     String borrowTime;
     PersonEntityDto person;
     DeviceEntityDto device;
@@ -21,7 +21,9 @@ public class UsageInfoBorrowDto implements Serializable {
     /**
      * DTO for {@link com.example.managementweb.models.entities.PersonEntity}
      */
-    @Value
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class PersonEntityDto implements Serializable {
         Long id;
         String name;
@@ -31,7 +33,9 @@ public class UsageInfoBorrowDto implements Serializable {
     /**
      * DTO for {@link com.example.managementweb.models.entities.DeviceEntity}
      */
-    @Value
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class DeviceEntityDto implements Serializable {
         Long id;
         String name;

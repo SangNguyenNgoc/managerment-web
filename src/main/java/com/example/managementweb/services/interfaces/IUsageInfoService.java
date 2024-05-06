@@ -25,6 +25,8 @@ public interface IUsageInfoService {
 
     UsageInfoBookingDto getById(Long id);
 
+    UsageInfoBorrowDto getBorrowById(Long id);
+
     boolean existByBookingTime(LocalDateTime time, Long deviceId);
 
     boolean existByBorrowTime(LocalDateTime time, Long deviceId);

@@ -4,7 +4,7 @@
 </head>
 <body>
 <div layout:fragment="content">
-    <div class="position-fixed top-0 end-0 p-3" style="z-index: 11">
+    <div class="position-fixed end-0 p-3" style="z-index: 11; top: 100px">
         <div aria-atomic="true" aria-live="assertive" class="toast align-items-center bg-warning border-0"
              id="detail-error-toast"
              role="alert"
@@ -17,25 +17,25 @@
         </div>
     </div>
     <div class="d-flex justify-content-between align-items-center py-4">
-        <a class="btn" role="button" th:href="@{/admin/person}">Quay lại</a>
+        <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0 font-weight-bold" style="font-size: 20px">
+                <li class="breadcrumb-item"><a class="text-decoration-none" th:href="@{/admin/person}">Quản lý người
+                    dùng</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Chi tiết</li>
+            </ol>
+        </nav>
         <div class="d-flex justify-content-center">
-            <a class="btn btn-warning" role="button" th:href="@{/admin/person/}">Phạt</a>
-            <a class="btn btn-primary ms-3" role="button" th:href="@{/admin/person/}">Lập phiếu</a>
+            <a class="btn btn-warning" role="button" th:href="@{/admin/person/penalize/{id}(id=${person.id})}"><i class="fa-solid fa-circle-exclamation"></i> Phạt</a>
         </div>
     </div>
-    <div class="bg-white border p-3 p-md-5" style="border-radius: 10px;">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-
-            <h4 class="">User Detail#<span th:text="${person.id}"></span></h4>
-            <a id="btn-delete" class="btn btn-outline-danger" th:href="@{/admin/person/delete/{id}(id=${person.id})}">Xóa</a>
-
-        </div>
+    <div class="bg-white border ps-5 pe-5 pb-4 pt-3" style="border-radius: 10px;">
+        <a class="" role="button" th:href="@{/admin/person}">Quay lại</a>
         <hr/>
         <form class="mt-3" th:action="@{/admin/person/edit}" method="post" th:object="${person}">
             <div class="row">
                 <div class="col-12 col-lg-6">
                     <div class="mb-3 row">
-                        <label for="person_id" class="col-4 col-md-3 col-form-label">ID</label>
+                        <label for="person_id" class="col-4 col-md-3 col-form-label fs-6 fw-medium">Mã thành viên: </label>
                         <div class="col-8 col-md-9">
                             <input type="number" disabled readonly class="form-control disabled" id="person_id"
                                    th:value="${person.id}" th:field="*{id}">
@@ -45,7 +45,7 @@
                 </div>
                 <div class="col-12 col-lg-6">
                     <div class="mb-3 row">
-                        <label for="fullname" class="col-4 col-md-3 col-form-label">Họ Tên</label>
+                        <label for="fullname" class="col-4 col-md-3 col-form-label fs-6 fw-medium">Họ Tên:</label>
                         <div class="col-8 col-md-9">
                             <input type="text" class="form-control" id="fullname" th:value="${person.name}"
                                    th:field="*{name}">
@@ -57,7 +57,7 @@
             <div class="row">
                 <div class="col-12 col-lg-6">
                     <div class="mb-3 row">
-                        <label for="email" class="col-4 col-md-3 col-form-label">Email</label>
+                        <label for="email" class="col-4 col-md-3 col-form-label fs-6 fw-medium">Email: </label>
                         <div class="col-8 col-md-9">
                             <input type="email" class="form-control" id="email" th:value="${person.email}"
                                    th:field="*{email}">
@@ -67,7 +67,7 @@
                 </div>
                 <div class="col-12 col-lg-6">
                     <div class="mb-3 row">
-                        <label for="phone" class="col-4 col-md-3 col-form-label">Điện thoại</label>
+                        <label for="phone" class="col-4 col-md-3 col-form-label fs-6 fw-medium">Điện thoại: </label>
                         <div class="col-8 col-md-9">
                             <input type="number" class="form-control" id="phone"
                                    th:value="${person.phoneNumber}" th:field="*{phoneNumber}">
@@ -79,7 +79,7 @@
             <div class="row">
                 <div class="col-12 col-lg-6">
                     <div class="mb-3 row">
-                        <label for="major" class="col-4 col-md-3 col-form-label">Ngành</label>
+                        <label for="major" class="col-4 col-md-3 col-form-label fs-6 fw-medium">Ngành: </label>
                         <div class="col-8 col-md-9">
                             <input type="text" class="form-control" id="major" th:value="${person.department}"
                                    th:field="*{department}">
@@ -89,7 +89,7 @@
                 </div>
                 <div class="col-12 col-lg-6">
                     <div class="mb-3 row">
-                        <label for="specialization" class="col-4 col-md-3 col-form-label pe-0">Chuyên Ngành</label>
+                        <label for="specialization" class="col-4 col-md-3 col-form-label pe-0 fs-6 fw-medium">Chuyên Ngành: </label>
                         <div class="col-8 col-md-9">
                             <input type="text" class="form-control" id="specialization"
                                    th:value="${person.profession}" th:field="*{profession}">
@@ -98,8 +98,9 @@
                     </div>
                 </div>
             </div>
-            <div class="text-center">
-                <button type="submit" class="btn btn-primary px-4">Cập nhật</button>
+            <div class="text-center mt-3">
+                <button type="submit" class="btn btn-primary px-4 me-4">Cập nhật</button>
+                <a id="btn-delete" class="btn btn-outline-danger" th:href="@{/admin/person/delete/{id}(id=${person.id})}">Xóa</a>
             </div>
         </form>
 

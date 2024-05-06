@@ -48,7 +48,7 @@ public class PersonService implements IPersonService {
 
     private final PasswordEncoder passwordEncoder;
 
-    private final ObjectsValidator<PersonCreateDto> personValidator;
+    private final ObjectsValidator<PersonExcelDto> personValidator;
 
     private final AppUtil appUtil;
 
@@ -216,11 +216,15 @@ public class PersonService implements IPersonService {
                     break;
                 }
                 if (row.getRowNum() > 0) {
-                    PersonCreateDto person = getFromRow(row);
+                    PersonExcelDto person = getFromRow(row);
                     if (!personValidator.validate(person).isEmpty()) {
+                        System.out.println(personValidator.validate(person));
                         throw new RuntimeException();
                     } else {
-                        personEntities.add(personMapper.toEntity(person));
+                        PersonEntity personEntity = personMapper.toEntity(person);
+                        personEntity.setRole(Role.ROLE_USER);
+                        personEntity.setStatus(true);
+                        personEntities.add(personEntity);
                     }
                 }
             }
@@ -261,8 +265,8 @@ public class PersonService implements IPersonService {
         });
     }
 
-    private PersonCreateDto getFromRow(Row row) {
-        return PersonCreateDto.builder()
+    private PersonExcelDto getFromRow(Row row) {
+        return PersonExcelDto.builder()
                 .id(String.valueOf((long) row.getCell(0).getNumericCellValue()))
                 .name(row.getCell(1).getStringCellValue())
                 .email(row.getCell(6).getStringCellValue())

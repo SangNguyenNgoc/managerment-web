@@ -4,25 +4,24 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Value;
 
-import java.io.Serializable;
-
-/**
- * DTO for {@link com.example.managementweb.models.entities.PersonEntity}
- */
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PersonAddDto implements Serializable {
+public class PersonExcelDto {
     @NotBlank(message = "Mã thành viên không được để trống")
     @Pattern(regexp = "\\d{10}", message = "Mã thành viên chỉ được chứa 10 ký tự và chỉ được là ký tự số")
     private String id;
 
     @Email(message = "Email sai định dạng")
     private String email;
+
+    @NotBlank(message = "Mật khẩu không được để trống")
+    private String password;
 
     @NotBlank(message = "Tên người dùng không được để trống")
     private String name;
@@ -36,4 +35,5 @@ public class PersonAddDto implements Serializable {
     @NotBlank(message = "Số điện thoại không được để trống")
     @Pattern(regexp = "^[0-9]{10}$", message = "Số điện thoại sai định dạng")
     private String phoneNumber;
+
 }

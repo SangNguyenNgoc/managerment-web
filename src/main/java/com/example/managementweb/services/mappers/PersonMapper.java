@@ -18,6 +18,8 @@ public interface PersonMapper {
 
     PersonEntity toEntity(PersonCreateDto personCreateDTO);
 
+    PersonEntity toEntity(PersonExcelDto personExcelDto);
+
     PersonResponseDto toResponseDto(PersonEntity personEntity);
 
     PersonUpdateDto toUpdateDto(PersonEntity personEntity);

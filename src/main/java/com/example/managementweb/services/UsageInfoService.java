@@ -54,8 +54,8 @@ public class UsageInfoService implements IUsageInfoService {
                 .device(device)
                 .borrowTime(LocalDateTime.now())
                 .build();
-        usageInfoRepository.save(usageInfo);
-        return usageInfoMapper.toBorrowDto(usageInfo);
+        UsageInfoEntity result = usageInfoRepository.save(usageInfo);
+        return usageInfoMapper.toBorrowDto(result);
     }
 
     @Override
@@ -131,6 +131,15 @@ public class UsageInfoService implements IUsageInfoService {
         Optional<UsageInfoEntity> usageInfo = usageInfoRepository.findById(id);
         return usageInfo
                 .map(usageInfoMapper::toBookingDto)
+                .orElse(null);
+    }
+
+
+    @Override
+    public UsageInfoBorrowDto getBorrowById(Long id) {
+        Optional<UsageInfoEntity> usageInfo = usageInfoRepository.findById(id);
+        return usageInfo
+                .map(usageInfoMapper::toBorrowDto)
                 .orElse(null);
     }
 

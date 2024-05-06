@@ -14,12 +14,12 @@
 <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
 <script>
     $(document).ready(function () {
-        var pageName = window.location.pathname.split("/")[2];
+        const pageName = window.location.pathname.split("/")[2];
 
         $(".nav-link").removeClass("active");
 
         $(".nav-link").each(function () {
-            var href = $(this).attr("href");
+            const href = $(this).attr("href");
 
             if (href.endsWith(pageName)) {
                 $(this).addClass("active");

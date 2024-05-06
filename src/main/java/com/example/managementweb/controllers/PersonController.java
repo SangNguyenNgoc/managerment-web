@@ -1,18 +1,25 @@
 package com.example.managementweb.controllers;
 
+import com.example.managementweb.models.dtos.penalize.PenalizeCreateDto;
+import com.example.managementweb.models.dtos.penalize.PenalizeResponseDto;
+import com.example.managementweb.models.dtos.penalize.PenalizeType;
 import com.example.managementweb.models.dtos.person.PersonAddDto;
 import com.example.managementweb.models.dtos.person.PersonCreateDto;
 import com.example.managementweb.models.dtos.person.PersonResponseDto;
 import com.example.managementweb.models.dtos.person.PersonUpdateDto;
 import com.example.managementweb.models.entities.Role;
+import com.example.managementweb.services.interfaces.IPenalizeService;
 import com.example.managementweb.services.interfaces.IPersonService;
+import com.example.managementweb.util.AppUtil;
 import com.example.managementweb.util.SecurityUtil;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.*;
@@ -23,24 +30,17 @@ import java.util.*;
 public class PersonController {
 
     private final IPersonService personService;
-    static List<PersonResponseDto> peopleList = generateRandomPersons(20);
-    public static List<PersonResponseDto> generateRandomPersons(int count) {
-        List<PersonResponseDto> personList = new ArrayList<>();
-        Random random = new Random();
-        for (int i = 0; i < count; i++) {
-            PersonResponseDto person = PersonResponseDto.builder()
-                    .id((long) (i + 1))
-                    .name("Person " + (i + 1))
-                    .department("Department " + random.nextInt(5))
-                    .email("person" + (i + 1) + "@example.com")
-                    .profession("Profession " + random.nextInt(5))
-                    .phoneNumber("123456789")
-                    .role(Role.ROLE_ADMIN)
-                    .build();
-            personList.add(person);
-        }
-        return personList;
-    }
+
+    private final IPenalizeService penalizeService;
+
+    private final AppUtil appUtil;
+
+    private static final List<PenalizeType> penalizeTypes = List.of(
+            PenalizeType.builder().id(0).value("Khóa thẻ 1 tháng").build(),
+            PenalizeType.builder().id(1).value("Khóa thẻ 2 tháng").build(),
+            PenalizeType.builder().id(2).value("Khóa thẻ 1 tháng và bồi thường").build(),
+            PenalizeType.builder().id(3).value("Bồi thường").build()
+    );
 
     @GetMapping("")
     public String index(Model model){
@@ -63,10 +63,8 @@ public class PersonController {
         }
         return "person/detail";
     }
-//    @GetMapping("/edit")
-//    public String edit( @ModelAttribute("person") PersonUpdateDto editedPerson) {
-//        return "person/detail";
-//    }
+
+
     @PostMapping("/edit")
     public String edit( @Valid @ModelAttribute("person") PersonUpdateDto editedPerson,
                         BindingResult result,
@@ -119,4 +117,48 @@ public class PersonController {
         redirectAttributes.addAttribute("success", "Xoá thành công tài khoản " + id);
         return "redirect:/admin/person";
     }
+
+    @GetMapping("/penalize/{personId}")
+    public String createPenalizePage(
+            @PathVariable("personId") Long userId,
+            @ModelAttribute("penalize")PenalizeCreateDto penalize,
+            Model m
+    ) {
+        PersonResponseDto person = personService.findByIdAndStatusTrue(userId);
+        penalize.setPerson(person.getId());
+        penalize.setPersonName(person.getName());
+        m.addAttribute("penalizeList", penalizeTypes);
+        return "person/create-penalty";
+    }
+
+    @PostMapping("/penalize")
+    public String createPenalize(
+            @Valid @ModelAttribute("penalize")PenalizeCreateDto penalize,
+            RedirectAttributes redirectAttributes,
+            Model m
+    ) {
+        if(Integer.parseInt(penalize.getType()) == 2 || Integer.parseInt(penalize.getType())==3) {
+            if (penalize.getPayment() == null) {
+                redirectAttributes.addAttribute("invalidPay","true");
+                return "redirect:/admin/person/penalize/" + penalize.getPerson();
+            }
+        }
+        penalize.setType(penalizeTypes.get(Integer.parseInt(penalize.getType())).getValue());
+        PenalizeResponseDto result = penalizeService.create(penalize);
+        redirectAttributes.addAttribute("successPenalize",result.getId());
+        return "redirect:/admin/person/penalize/" + penalize.getPerson();
+    }
+
+    @PostMapping("/excel")
+    @ResponseBody
+    public ResponseEntity<String> importFile(@ModelAttribute("file") MultipartFile file) {
+        Boolean result = personService.importFromExcel(file);
+        if(result) {
+            return ResponseEntity.ok("Success");
+        } else {
+            return ResponseEntity.badRequest().body("Failure");
+        }
+    }
+
+
 }
