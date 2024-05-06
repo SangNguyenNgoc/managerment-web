@@ -1,6 +1,7 @@
 package com.example.managementweb.services;
 
 import com.example.managementweb.event.DeleteBookingTask;
+import com.example.managementweb.models.dtos.usageInfo.CheckInResponseDto;
 import com.example.managementweb.models.dtos.usageInfo.UsageInfoBookingDto;
 import com.example.managementweb.models.dtos.usageInfo.UsageInfoBookingRequestDto;
 import com.example.managementweb.models.dtos.usageInfo.UsageInfoBorrowDto;
@@ -64,9 +65,14 @@ public class UsageInfoService implements IUsageInfoService {
     }
 
     @Override
+    public List<CheckInResponseDto> getAllCheckIn() {
+        return usageInfoMapper.toCheckInDtoList(usageInfoRepository.findAllCheckIn());
+    }
+
+    @Override
     @Transactional
-    public UsageInfoBorrowDto returnDevice(String id) {
-        UsageInfoEntity usageInfo = usageInfoRepository.findByIdForReturn(appUtil.parseId(id));
+    public UsageInfoBorrowDto returnDevice(Long id) {
+        UsageInfoEntity usageInfo = usageInfoRepository.findByIdForReturn(id);
         if (usageInfo == null){
             return null;
         }

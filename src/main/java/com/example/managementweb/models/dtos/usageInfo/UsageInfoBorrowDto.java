@@ -28,6 +28,8 @@ public class UsageInfoBorrowDto implements Serializable {
         Long id;
         String name;
         String email;
+        String phoneNumber;
+
     }
 
     /**

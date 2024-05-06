@@ -1,5 +1,6 @@
 package com.example.managementweb.services.interfaces;
 
+import com.example.managementweb.models.dtos.usageInfo.CheckInResponseDto;
 import com.example.managementweb.models.dtos.usageInfo.UsageInfoBookingDto;
 import com.example.managementweb.models.dtos.usageInfo.UsageInfoBookingRequestDto;
 import com.example.managementweb.models.dtos.usageInfo.UsageInfoBorrowDto;
@@ -13,7 +14,9 @@ public interface IUsageInfoService {
 
     List<UsageInfoBorrowDto> getAllBorrow();
 
-    UsageInfoBorrowDto returnDevice(String Id);
+    UsageInfoBorrowDto returnDevice(Long Id);
+
+    public List<CheckInResponseDto> getAllCheckIn();
 
     Boolean deleteBorrow(Long id);
 

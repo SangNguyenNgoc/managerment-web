@@ -1,0 +1,85 @@
+<html layout:decorate="~{fragments/layout}" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Document</title>
+    <link
+            href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css"
+            rel="stylesheet"
+    />
+    <link
+            href="https://cdn.datatables.net/2.0.5/css/dataTables.bootstrap5.css"
+            rel="stylesheet"
+    />
+</head>
+<style>
+    /* Custom CSS for hover effect */
+    .custom-cursor-pointer:hover {
+        cursor: pointer;
+        background-color: #5d60ef;
+        color: white;
+        transition: 200ms linear;
+    }
+</style>
+<body>
+<div
+        class="bg-white shadow"
+        layout:fragment="content"
+        style="border-radius: 8px; padding: 22px 32px 22px 32px"
+>
+    <div class="fs-5 fw-bold mb-3" style="color: #1e1b60">Usage</div>
+    <!-- Table Header -->
+    <table
+            class="table table-striped"
+            id="usageTable"
+            style="width: 100%"
+    >
+        <thead>
+        <tr class="">
+          <th>Tên</th>
+          <th>Điện thoại</th>
+          <th>Thiết bị</th>
+          <th>Ngày mượn</th>
+          <th>Ngày trả</th>
+          <th>Chức năng</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="usage, index : ${list}">
+            <td th:text="${usage.person.name}">name</td>
+            <td th:text="${usage.person.phoneNumber}">phone</td>
+            <td th:text="${usage.device.name}">device</td>
+            <td th:text="${usage.borrowTime}">borrow time</td>
+            <td th:text="${usage.returnTime}">return time</td>
+            <td class="text-center">
+                <div th:if="${usage.returnTime == null}">
+                    <a class="btn-primary btn" th:href="@{/admin/usage/return/{id}(id=${usage.id})}">
+                        Trả
+                    </a>
+                </div>
+                <div th:unless="${usage.returnTime == null}">
+                    <a class="btn-body btn">
+                        Đã trả
+                    </a>
+                </div>
+
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <script>
+        $(document).ready(function () {
+            console.log(1)
+            loadingEle.hide()
+        });
+    </script>
+    <script>
+        new DataTable("#usageTable");
+    </script>
+</div>
+</body>
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.datatables.net/2.0.5/js/dataTables.js"></script>
+<script src="https://cdn.datatables.net/2.0.5/js/dataTables.bootstrap5.js"></script>
+</html>

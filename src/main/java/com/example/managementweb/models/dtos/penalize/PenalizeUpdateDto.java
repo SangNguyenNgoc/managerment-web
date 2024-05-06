@@ -1,7 +1,10 @@
 package com.example.managementweb.models.dtos.penalize;
 
 
+import com.example.managementweb.models.dtos.person.PersonResponseDto;
 import com.example.managementweb.models.entities.PenalizeEntity;
+import jakarta.validation.constraints.Digits;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
@@ -19,14 +22,17 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PenalizeUpdateDto implements Serializable {
-    @NotBlank(message = "Mã xử lí không được bỏ trống")
-    @Pattern(regexp = "\\d", message = "Mã xử lí chỉ được chứa ký tự số")
+
     Long id;
     @NotBlank(message = "Hình thức xử lí không được để trống")
     String type;
-    @Pattern(regexp = "\\d", message = "Tiền chỉ được chứa ký tự số")
+    @Digits(integer = Integer.MAX_VALUE, fraction = 0, message = "Tiền chỉ được chứa ký tự số")
+    @Max(value = 99999999, message = "Tiền phải nhỏ hơn 999.999.999")
     Integer payment;
-
+//    @NotBlank(message = "Trạng thái không được để trống")
+    Boolean status;
+    PersonResponseDto person;
+    String date;
 }
 
 
