@@ -1,6 +1,7 @@
 package com.example.managementweb.services.interfaces;
 
 import com.example.managementweb.models.dtos.statistic.CountPerDate;
+import com.example.managementweb.models.dtos.statistic.DeviceBorrowingStatByTime;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -21,5 +22,9 @@ public interface IStatisticService {
     List<CountPerDate> statisticPenalizePerYearNotPresent(int year);
 
     List<CountPerDate> statisticPenalizePerYearIsPresent(int year);
+
+    List<DeviceBorrowingStatByTime> statisticDevicePerMonth(int month, int year);
+
+    List<DeviceBorrowingStatByTime> statisticDevicePerYear(int year);
 
 }

@@ -1,0 +1,245 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{fragments/layout}">
+<head>
+    <title>Thống kê</title>
+    <link rel="stylesheet" th:href="@{/css/nav.css}">
+    <script src="https://kit.fontawesome.com/9d1d9a82d2.js" crossorigin="anonymous"></script>
+    <style>
+        .chart-container {
+            margin: auto;
+        }
+        .scrollable-div {
+            overflow-y: auto;
+            height: 650px;
+        }
+
+    </style>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="scrollable-div col-12">
+        <div class="card chart-container col-11 mt-5">
+            <nav class="navbar-expand-lg col-12 border-bottom border-2 mb-3">
+                <div class="container-fluid h-100" style="height: 100%; margin-bottom: -2px">
+                    <div class="collapse navbar-collapse">
+                        <ul class="navbar-nav me-auto fw-medium h-50px d-flex justify-content-center align-items-center">
+                            <li class="not-active ps-3 pe-3">
+                                <a class="nav-link" role="button">Lượt vào</a>
+                            </li>
+                        </ul>
+                        <label for="dateCheckInSelect">Lọc theo: </label>
+                        <select id="dateCheckInSelect" class="me-3 ms-3 form-select" style="width: 100px;">
+                            <option value="day" selected>Ngày</option>
+                            <option value="month">Tháng</option>
+                            <option value="year">Năm</option>
+                        </select>
+                        <input class="me-3 form-control w-25" id="date" name="date" type="date" placeholder="Ngày">
+                        <input class="me-3 form-control w-25" id="department" name="department" type="text" placeholder="Khoa & Ngành">
+                        <button class="btn btn-primary" onclick="fetchCheckInData()">Lọc</button>
+                    </div>
+                </div>
+            </nav>
+            <canvas id="checkInChart"></canvas>
+        </div>
+        <div class="card chart-container col-11 mt-5">
+            <nav class="navbar-expand-lg col-12 border-bottom border-2 mb-3">
+                <div class="container-fluid h-100" style="height: 100%; margin-bottom: -2px">
+                    <div class="collapse navbar-collapse">
+                        <ul class="navbar-nav me-auto fw-medium h-50px d-flex justify-content-center align-items-center">
+                            <li class="not-active ps-3 pe-3">
+                                <a class="nav-link" role="button">Thiết bị</a>
+                            </li>
+                        </ul>
+                        <label for="dateDeviceSelect">Lọc theo: </label>
+                        <select id="dateDeviceSelect" class="me-3 ms-3 form-select" style="width: 100px;">
+                            <option value="month" selected>Tháng</option>
+                            <option value="year">Năm</option>
+                        </select>
+                        <input class="me-3 form-control w-25" id="deviceDate" name="date" type="date" placeholder="Ngày">
+                        <button class="btn btn-primary" onclick="fetchDeviceData()">Lọc</button>
+                    </div>
+                </div>
+            </nav>
+            <canvas id="deviceChart"></canvas>
+        </div>
+        <div class="card chart-container col-11 mt-5 mb-5">
+            <nav class="navbar-expand-lg col-12 border-bottom border-2 mb-3">
+                <div class="container-fluid h-100" style="height: 100%; margin-bottom: -2px">
+                    <div class="collapse navbar-collapse">
+                        <ul class="navbar-nav me-auto fw-medium h-50px d-flex justify-content-center align-items-center">
+                            <li class="not-active ps-3 pe-3">
+                                <a class="nav-link" role="button">Phiếu phạt</a>
+                            </li>
+                        </ul>
+                        <label for="datePenalizeSelect">Lọc theo: </label>
+                        <select id="datePenalizeSelect" class="me-3 ms-3 form-select" style="width: 100px;">
+                            <option value="month" selected>Tháng</option>
+                            <option value="year">Năm</option>
+                        </select>
+                        <select id="statusSelect" class="me-3 form-select" style="width: 200px;">
+                            <option value="" selected>Chưa hoàn thành</option>
+                            <option value="1">Đã hoàn thành</option>
+                        </select>
+                        <input class="me-3 form-control w-25" id="penalizeDate" name="penalizeDate" type="date" placeholder="Ngày">
+                        <button class="btn btn-primary" onclick="fetchPenalizeData()">Lọc</button>
+                    </div>
+                </div>
+            </nav>
+            <canvas id="penalizeChart"></canvas>
+        </div>
+    </div>
+
+
+<!--    <script th:src="@{/js/device/alert.js}" type="text/javascript"></script>-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.js"></script>
+    <script>
+        const initCheckInChart = (data) => {
+            const ctx = document.getElementById("checkInChart").getContext('2d');
+            const myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: data.map(item => {
+                        const type = $('#dateCheckInSelect').val()
+                        switch (type) {
+                            case 'day':
+                                return item.dateTime.split('T')[1].split(':')[0]
+                            case 'month' :
+                                return item.dateTime.split('T')[0].split('-')[2]
+                            case 'year' :
+                                return item.dateTime.split('T')[0].split('-')[1]
+                        }
+
+                    }),
+                    datasets: [{
+                        label: 'Check In',
+                        backgroundColor: 'rgba(161, 198, 247, 1)',
+                        borderColor: 'rgb(47, 128, 237)',
+                        data: data.map(item => item.count),
+                    }]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true,
+                            }
+                        }],
+                    }
+                },
+            });
+        }
+
+        const initDeviceChart = (data) => {
+            const ctx = document.getElementById("deviceChart").getContext('2d');
+            console.log(data)
+            const myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: data.map(item => item.deviceName),
+                    datasets: [{
+                        label: 'Check In',
+                        backgroundColor: 'rgba(161, 198, 247, 1)',
+                        borderColor: 'rgb(47, 128, 237)',
+                        data: data.map(item => item.timesBorrowed),
+                    }]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true,
+                            }
+                        }],
+                    }
+                },
+            });
+        }
+
+        const initPenalizeChart = (data) => {
+            const ctx = document.getElementById("penalizeChart").getContext('2d');
+            const myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: data.map(item => {
+                        const type = $('#datePenalizeSelect').val()
+                        switch (type) {
+                            case 'month' :
+                                return item.dateTime.split('T')[0].split('-')[2]
+                            case 'year' :
+                                return item.dateTime.split('T')[0].split('-')[1]
+                        }
+                    }),
+                    datasets: [{
+                        label: 'Phiết phạt',
+                        backgroundColor: 'rgba(161, 198, 247, 1)',
+                        borderColor: 'rgb(47, 128, 237)',
+                        data: data.map(item => item.count),
+                    }]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true,
+                            }
+                        }],
+                    }
+                },
+            });
+        }
+
+        const fetchPenalizeData = async() => {
+            const date = $('#penalizeDate').val() || new Date().toISOString().split('T')[0]
+            const formattedDate = date.toLocaleString()
+            const search = $('#statusSelect').val()
+            const type = $('#datePenalizeSelect').val()
+            try {
+                const response = await fetch(`/admin/statistic/penalize?date=${formattedDate}&search=${search}&type=${type}`)
+                const data = await response.json()
+                initPenalizeChart(data)
+            } catch (e) {
+                console.log(e)
+            }
+        }
+
+        const fetchDeviceData = async() => {
+            const date = $('#deviceDate').val() || new Date().toISOString().split('T')[0]
+            const formattedDate = date.toLocaleString()
+            const type = $('#dateDeviceSelect').val()
+            try {
+                const response = await fetch(`/admin/statistic/device?date=${formattedDate}&type=${type}`)
+                const data = await response.json()
+                console.log(data)
+                initDeviceChart(data)
+            } catch (e) {
+                console.log(e)
+            }
+        }
+
+        const fetchCheckInData = async() => {
+            const date = $('#date').val() || new Date().toISOString().split('T')[0]
+            const formattedDate = date.toLocaleString()
+            const search = $('#department').val() || ''
+            const type = $('#dateCheckInSelect').val()
+            try {
+                const response = await fetch(`/admin/statistic/checkin?date=${formattedDate}&search=${search}&type=${type}`)
+                const data = await response.json()
+                initCheckInChart(data)
+            } catch (e) {
+                console.log(e)
+            }
+        }
+
+        fetchCheckInData()
+        fetchDeviceData()
+        fetchPenalizeData()
+
+
+    </script>
+    <script>
+        $(document).ready(function () {
+            loadingEle.hide()
+        });
+    </script>
+</div>
+</body>
+</html>

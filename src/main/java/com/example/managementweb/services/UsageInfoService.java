@@ -28,6 +28,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.Timer;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -165,5 +166,24 @@ public class UsageInfoService implements IUsageInfoService {
     @Scheduled(fixedRate = 300000)
     public void deleteUsageByTime() {
         usageInfoRepository.deleteByBookingTimeBefore(LocalDateTime.now().minusHours(1));
+    }
+
+    @Override
+    public List<UsageInfoBookingDto> getAllBooking() {
+        List<UsageInfoEntity> usageInfoEntities = usageInfoRepository.findAllBooking();
+        return usageInfoEntities.stream().map(usageInfoMapper::toBookingDto).collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional
+    public void getDevice(Long id) {
+        Optional<UsageInfoEntity> usageInfo = usageInfoRepository.findById(id);
+        usageInfo.ifPresent(usageInfoEntity -> usageInfoEntity.setBorrowTime(LocalDateTime.now()));
+
+    }
+
+    @Override
+    public boolean checkBooking(Long id) {
+        return usageInfoRepository.existsByBookingTimeBeforeAndId(LocalDateTime.now(), id);
     }
 }

@@ -35,12 +35,6 @@ public class HomeController {
 
     IDeviceService deviceService;
 
-    IUsageInfoService usageInfoService;
-
-    IPenalizeService penalizeService;
-
-    AppUtil appUtil;
-
     @GetMapping("/")
     public String home(
             Model m,
@@ -63,13 +57,6 @@ public class HomeController {
             m.addAttribute("deviceList", devices);
         }
         return "user/index";
-    }
-
-
-    @GetMapping("/home")
-    public String admin(HttpSession httpSession){
-        log.info(SecurityUtil.getSessionUser());
-        return "admin/admin";
     }
 
 

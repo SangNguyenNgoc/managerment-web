@@ -17,16 +17,25 @@ import java.util.List;
 
 @Repository
 public interface UsageInfoRepository extends JpaRepository<UsageInfoEntity, Long> {
-    @Query(value = "select (count(u) > 0) from UsageInfoEntity u where date(u.bookingTime) = ?1 and u.device.id = ?2")
+    @Query(value = "select (count(u) > 0) from UsageInfoEntity u where date(u.bookingTime) = ?1 and u.device.id = ?2 and u.returnTime is null")
     boolean existsByBookingTime(LocalDate bookingDate, Long deviceId);
 
-    @Query(value = "select (count(u) > 0) from UsageInfoEntity u where date(u.borrowTime) = ?1 and u.device.id = ?2")
+    @Query(value = "select (count(u) > 0) from UsageInfoEntity u where date(u.borrowTime) = ?1 and u.device.id = ?2 and u.returnTime is null")
     boolean existsByBorrowTime(LocalDate borrowTime,Long deviceId);
 
     @Query("SELECT u " +
             "FROM UsageInfoEntity u " +
             "WHERE u.borrowTime IS NOT NULL")
     List<UsageInfoEntity> findAllBorrow();
+
+    @Query("SELECT u " +
+            "FROM UsageInfoEntity u " +
+            "WHERE u.bookingTime IS NOT NULL " +
+            "AND u.borrowTime IS NULL ")
+    List<UsageInfoEntity> findAllBooking();
+
+    @Query("select (count(u) > 0) from UsageInfoEntity u where u.bookingTime < ?1 and u.id = ?2")
+    boolean existsByBookingTimeBeforeAndId(LocalDateTime bookingTime, Long id);
 
     @Query("SELECT u " +
             "FROM UsageInfoEntity u " +
@@ -138,7 +147,6 @@ public interface UsageInfoRepository extends JpaRepository<UsageInfoEntity, Long
             "FROM UsageInfoEntity u " +
             "WHERE MONTH (u.borrowTime) = :month " +
             "AND YEAR (u.borrowTime) = :year " +
-            "AND u.returnTime is not null " +
             "GROUP BY u.device.id " +
             "ORDER BY u.device.id")
     List<DeviceBorrowingStatByTime> countDevicesBorrowedInMonth(
@@ -160,7 +168,6 @@ public interface UsageInfoRepository extends JpaRepository<UsageInfoEntity, Long
     @Query("SELECT NEW com.example.managementweb.models.dtos.statistic.DeviceBorrowingStatByTime(u.device.id, u.device.name, COUNT (MONTH (u.borrowTime))) " +
             "FROM UsageInfoEntity u " +
             "WHERE YEAR (u.borrowTime) = :year " +
-            "AND u.returnTime is not null " +
             "GROUP BY u.device.id " +
             "ORDER BY u.device.id")
     List<DeviceBorrowingStatByTime> countDevicesBorrowedInYear(

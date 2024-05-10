@@ -28,6 +28,12 @@ const openFilePicker = () => {
     document.getElementById('fileInput').click();
 }
 
+const e = params.get('error')
+console.log(e)
+if(e) {
+    showToast(e)
+}
+
 const handleFile = async (event) => {
     const file = event.target.files[0];
     const formData = new FormData();

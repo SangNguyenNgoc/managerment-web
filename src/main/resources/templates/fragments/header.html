@@ -5,17 +5,14 @@
         </div>
 
         <div class="col-6">
-            <div class="col-12 nav-link gap-2 g-0 d-flex justify-content-end align-items-center pointer-event" id="navbarDropdown"
+            <div class="col-12 gap-2 g-0 d-flex justify-content-end align-items-center pointer-event" id="navbarDropdown"
                  role="button"
                  data-bs-toggle="dropdown">
-                <div class="d-flex justify-content-end align-items-center fw-medium" th:text="${user}">
-                </div>
                 <div class="nar-icon">
                     <i class="fa-solid fa-user"></i>
                 </div>
             </div>
             <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="#">Thông tin</a>
                 <a class="dropdown-item" th:href="@{/logout}">Đăng xuất</a>
             </div>
         </div>

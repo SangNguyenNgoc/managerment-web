@@ -1,6 +1,7 @@
 package com.example.managementweb.services;
 
 import com.example.managementweb.models.dtos.statistic.CountPerDate;
+import com.example.managementweb.models.dtos.statistic.DeviceBorrowingStatByTime;
 import com.example.managementweb.repositories.PenalizeRepository;
 import com.example.managementweb.repositories.UsageInfoRepository;
 import com.example.managementweb.services.interfaces.IStatisticService;
@@ -106,7 +107,7 @@ public class StatisticService implements IStatisticService {
     @Override
     public List<CountPerDate> statisticPenalizePerMonthNotPresent(LocalDate date) {
         List<LocalDate> dayOfMonth = getDayOfMonth(date.getMonth().getValue(), date.getYear());
-        List<CountPerDate> checkInCounts = penalizeRepository.countPerMonthNotPresent(date.getMonth().getValue(), date.getYear());
+        List<CountPerDate> checkInCounts = penalizeRepository.countPerMonthNotPresent(date.getYear(), date.getMonth().getValue());
 
         return dayOfMonth.stream()
                 .map(day -> {
@@ -124,7 +125,7 @@ public class StatisticService implements IStatisticService {
     @Override
     public List<CountPerDate> statisticPenalizePerMonthIsPresent(LocalDate date) {
         List<LocalDate> dayOfMonth = getDayOfMonth(date.getMonth().getValue(), date.getYear());
-        List<CountPerDate> checkInCounts = penalizeRepository.countPerMonthIsPresent(date.getMonth().getValue(), date.getYear());
+        List<CountPerDate> checkInCounts = penalizeRepository.countPerMonthIsPresent(date.getYear(), date.getMonth().getValue());
 
         return dayOfMonth.stream()
                 .map(day -> {
@@ -194,5 +195,15 @@ public class StatisticService implements IStatisticService {
             currentDate = currentDate.plusDays(1);
         }
         return daysOfMonth;
+    }
+
+    @Override
+    public List<DeviceBorrowingStatByTime> statisticDevicePerMonth(int month, int year) {
+        return usageInfoRepository.countDevicesBorrowedInMonth(year, month);
+    }
+
+    @Override
+    public List<DeviceBorrowingStatByTime> statisticDevicePerYear(int year) {
+        return usageInfoRepository.countDevicesBorrowedInYear(year);
     }
 }

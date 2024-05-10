@@ -24,7 +24,7 @@ class StatisticServiceTest {
 
     @Test
     void statisticCheckinPerDay() {
-        LocalDateTime dateTime = LocalDateTime.of(2024, Month.APRIL,8, 0, 0);
+        LocalDateTime dateTime = LocalDateTime.of(2024, Month.MAY,6, 0, 0);
         List<CountPerDate> result = statisticService.statisticCheckinPerDay(dateTime.toLocalDate(), null);
         System.out.println(appUtil.toJson(result));
     }

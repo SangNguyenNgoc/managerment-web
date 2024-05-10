@@ -16,12 +16,10 @@
 <script>
     $(document).ready(function () {
         const pageName = window.location.pathname.split("/")[2];
-
-        $(".nav-link").removeClass("active");
-
-        $(".nav-link").each(function () {
+        const item = $(".nav-navigate")
+        item.removeClass("active");
+        item.each(function () {
             const href = $(this).attr("href");
-
             if (href.endsWith(pageName)) {
                 $(this).addClass("active");
             }

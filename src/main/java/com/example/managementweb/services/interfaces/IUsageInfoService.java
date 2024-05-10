@@ -14,6 +14,8 @@ public interface IUsageInfoService {
 
     List<UsageInfoBorrowDto> getAllBorrow();
 
+    List<UsageInfoBookingDto> getAllBooking();
+
     UsageInfoBorrowDto returnDevice(Long Id);
 
     public List<CheckInResponseDto> getAllCheckIn();
@@ -35,4 +37,8 @@ public interface IUsageInfoService {
     boolean existByBorrowTime(LocalDateTime time, Long deviceId);
 
     void deleteUsageByTime();
+
+    void getDevice(Long id);
+
+    boolean checkBooking(Long id);
 }
